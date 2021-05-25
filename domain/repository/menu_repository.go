@@ -5,9 +5,9 @@ import (
 )
 
 type MenuRepository interface {
-	Create(m *entity.Menu) error
-	Update(m *entity.Menu) error
-	Get(id int) (*entity.Menu, error)
-	GetList(weekID int) ([]entity.Menu, error)
-	Delete(id int) error
+	BulkCreate(menus []entity.Menu) ([]entity.Menu, error)
+	BulkUpdate(menus []entity.Menu) ([]entity.Menu, error)
+	GetByID(id int) (*entity.Menu, error)
+	GetByDate(date int64, userID int) (*entity.Menu, error)
+	GetList(weekID int, userID int) ([]entity.Menu, error)
 }
