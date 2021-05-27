@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"log"
 	"time"
 
 	"github.com/ipe-dev/menu_project/domain/entity"
@@ -8,10 +9,10 @@ import (
 )
 
 type MenuUseCase interface {
+	GetMenuList(GetMenuListRequest) ([]entity.Menu, error)
 	BulkCreateMenu(BulkCreateMenuRequest) ([]entity.Menu, error)
 	BulkUpdateMenu(BulkUpdateMenuRequest) ([]entity.Menu, error)
-	GetMenuByID(GetMenuRequest) (*entity.Menu, error)
-	GetMenuByDate(GetMenuRequest) (*entity.Menu, error)
+	GetMenu(GetMenuRequest) (*entity.Menu, error)
 }
 type menuUseCase struct {
 	menuRepository repository.MenuRepository
@@ -67,6 +68,9 @@ func (mu menuUseCase) BulkCreateMenu(bc BulkCreateMenuRequest) ([]entity.Menu, e
 		menus = append(menus, menu)
 	}
 	menus, err := mu.menuRepository.BulkCreate(menus)
+	if err != nil {
+		log.Println(err)
+	}
 	return menus, err
 }
 func (mu menuUseCase) BulkUpdateMenu(bu BulkUpdateMenuRequest) ([]entity.Menu, error) {
@@ -84,18 +88,30 @@ func (mu menuUseCase) BulkUpdateMenu(bu BulkUpdateMenuRequest) ([]entity.Menu, e
 		menus = append(menus, menu)
 	}
 	menus, err := mu.menuRepository.BulkUpdate(menus)
+	if err != nil {
+		log.Println(err)
+	}
 	return menus, err
 }
 
-func (mu menuUseCase) GetMenuByID(gr GetMenuRequest) (*entity.Menu, error) {
-	menu, err := mu.menuRepository.GetByID(gr.ID)
+func (mu menuUseCase) GetMenu(gr GetMenuRequest) (*entity.Menu, error) {
+	var menu *entity.Menu
+	var err error
+	if gr.ID != 0 {
+		menu, err = mu.menuRepository.GetByID(gr.ID)
+		if err != nil {
+			log.Println(err)
+		}
+	} else if gr.Date != 0 {
+		menu, err = mu.menuRepository.GetByDate(gr.Date, gr.ID)
+	}
 	return menu, err
-}
-func (mu menuUseCase) GetMenuByDate(gr GetMenuRequest) (*entity.Menu, error) {
-	menu, err := mu.menuRepository.GetByDate(gr.Date, gr.ID)
-	return menu, err
+
 }
 func (mu menuUseCase) GetMenuList(gr GetMenuListRequest) ([]entity.Menu, error) {
 	menus, err := mu.menuRepository.GetList(gr.WeekID, gr.UserID)
+	if err != nil {
+		log.Println(err)
+	}
 	return menus, err
 }
