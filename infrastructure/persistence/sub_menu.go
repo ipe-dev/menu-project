@@ -11,25 +11,25 @@ type subMenuPersistance struct{}
 func NewSubMenuPersistance() repository.SubMenuRepository {
 	return &subMenuPersistance{}
 }
-func (m subMenuPersistance) GetByMenuID(MenuID int) ([]entity.SubMenu, error) {
+func (p subMenuPersistance) GetByMenuID(MenuID int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
 	err := Db.Table("sub_menus").Where("menu_id = ?", MenuID).Find(&submenus).Error
 	return submenus, err
 }
-func (m subMenuPersistance) GetList(MenuIDList []int) ([]entity.SubMenu, error) {
+func (p subMenuPersistance) GetList(MenuIDList []int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
 	err := Db.Where("menu_id IN ?", MenuIDList).Find(&submenus).Error
 	return submenus, err
 }
 
-func (m subMenuPersistance) BulkCreate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
+func (p subMenuPersistance) BulkCreate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
 	Db := database.Db
 	err := Db.Create(&submenus).Error
 	return submenus, err
 }
-func (m subMenuPersistance) BulkUpdate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
+func (p subMenuPersistance) BulkUpdate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
 	Db := database.Db
 	err := Db.Updates(&submenus).Error
 	return submenus, err
