@@ -17,6 +17,11 @@ type MenuUseCase interface {
 type menuUseCase struct {
 	menuRepository repository.MenuRepository
 }
+
+func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
+	return &menuUseCase{r}
+}
+
 type CreateMenuRequest struct {
 	Name   string `json:"name"`
 	Date   int64  `json:"date"`
@@ -49,11 +54,7 @@ type BulkUpdateMenuRequest struct {
 	UpdateRequests []UpdateMenuRequest
 }
 
-func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
-	return &menuUseCase{r}
-}
-
-func (mu menuUseCase) BulkCreateMenu(bc BulkCreateMenuRequest) ([]entity.Menu, error) {
+func (u menuUseCase) BulkCreateMenu(bc BulkCreateMenuRequest) ([]entity.Menu, error) {
 
 	var menus []entity.Menu
 	for _, mr := range bc.CreateRequests {
@@ -67,15 +68,15 @@ func (mu menuUseCase) BulkCreateMenu(bc BulkCreateMenuRequest) ([]entity.Menu, e
 		}
 		menus = append(menus, menu)
 	}
-	menus, err := mu.menuRepository.BulkCreate(menus)
+	menus, err := u.menuRepository.BulkCreate(menus)
 	if err != nil {
 		log.Println(err)
 	}
 	return menus, err
 }
-func (mu menuUseCase) BulkUpdateMenu(bu BulkUpdateMenuRequest) ([]entity.Menu, error) {
+func (u menuUseCase) BulkUpdateMenu(r BulkUpdateMenuRequest) ([]entity.Menu, error) {
 	var menus []entity.Menu
-	for _, mr := range bu.UpdateRequests {
+	for _, mr := range r.UpdateRequests {
 		menu := entity.Menu{
 			ID:     mr.ID,
 			Name:   mr.Name,
@@ -87,29 +88,28 @@ func (mu menuUseCase) BulkUpdateMenu(bu BulkUpdateMenuRequest) ([]entity.Menu, e
 		}
 		menus = append(menus, menu)
 	}
-	menus, err := mu.menuRepository.BulkUpdate(menus)
+	menus, err := u.menuRepository.BulkUpdate(menus)
 	if err != nil {
 		log.Println(err)
 	}
 	return menus, err
 }
-
-func (mu menuUseCase) GetMenu(gr GetMenuRequest) (*entity.Menu, error) {
+func (u menuUseCase) GetMenu(gr GetMenuRequest) (*entity.Menu, error) {
 	var menu *entity.Menu
 	var err error
 	if gr.ID != 0 {
-		menu, err = mu.menuRepository.GetByID(gr.ID)
+		menu, err = u.menuRepository.GetByID(gr.ID)
 		if err != nil {
 			log.Println(err)
 		}
 	} else if gr.Date != 0 {
-		menu, err = mu.menuRepository.GetByDate(gr.Date, gr.ID)
+		menu, err = u.menuRepository.GetByDate(gr.Date, gr.ID)
 	}
 	return menu, err
 
 }
-func (mu menuUseCase) GetMenuList(gr GetMenuListRequest) ([]entity.Menu, error) {
-	menus, err := mu.menuRepository.GetList(gr.WeekID, gr.UserID)
+func (u menuUseCase) GetMenuList(gr GetMenuListRequest) ([]entity.Menu, error) {
+	menus, err := u.menuRepository.GetList(gr.WeekID, gr.UserID)
 	if err != nil {
 		log.Println(err)
 	}
