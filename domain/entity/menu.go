@@ -1,5 +1,9 @@
 package entity
 
+import (
+	"time"
+)
+
 type Menu struct {
 	ID        int
 	WeekID    int
@@ -8,6 +12,9 @@ type Menu struct {
 	Kind      int
 	URL       string
 	UserID    int
-	CreatedAt string
-	UpdatedAt string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
+
+const MenuKindLunch = 1
+const MenuKindDinner = 2
