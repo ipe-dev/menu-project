@@ -14,55 +14,55 @@ type MenuHandler interface {
 	HandleGetListMenu(c *gin.Context) gin.HandlerFunc
 }
 type menuHandler struct {
-	mu usecase.MenuUseCase
+	menuUsecase usecase.MenuUseCase
 }
 
-func (mh menuHandler) HandleGetMenu(c *gin.Context) gin.HandlerFunc {
+func (h menuHandler) HandleGetMenu(c *gin.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetMenuRequest
 		c.BindJSON(&r)
-		m, e := mh.mu.GetMenu(r)
+		menu, e := h.menuUsecase.GetMenu(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
-			c.JSON(http.StatusOK, m)
+			c.JSON(http.StatusOK, menu)
 		}
 	}
 }
 
-func (mh menuHandler) HandleBulkCreateMenu(c *gin.Context) gin.HandlerFunc {
+func (h menuHandler) HandleBulkCreateMenu(c *gin.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateMenuRequest
 		c.BindJSON(&r)
-		m, e := mh.mu.BulkCreateMenu(r)
+		menus, e := h.menuUsecase.BulkCreateMenu(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
-			c.JSON(http.StatusOK, m)
+			c.JSON(http.StatusOK, menus)
 		}
 	}
 }
-func (mh menuHandler) HandleBulkUpdateMenu(c *gin.Context) gin.HandlerFunc {
+func (h menuHandler) HandleBulkUpdateMenu(c *gin.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateMenuRequest
 		c.BindJSON(&r)
-		m, e := mh.mu.BulkUpdateMenu(r)
+		menus, e := h.menuUsecase.BulkUpdateMenu(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
-			c.JSON(http.StatusOK, m)
+			c.JSON(http.StatusOK, menus)
 		}
 	}
 }
-func (mh menuHandler) HandleGetListMenu(c *gin.Context) gin.HandlerFunc {
+func (h menuHandler) HandleGetListMenu(c *gin.Context) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetMenuListRequest
 		c.BindJSON(&r)
-		ms, e := mh.mu.GetMenuList(r)
+		menus, e := h.menuUsecase.GetMenuList(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
-			c.JSON(http.StatusOK, ms)
+			c.JSON(http.StatusOK, menus)
 		}
 	}
 }

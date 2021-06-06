@@ -12,11 +12,16 @@ type MenuUseCase interface {
 	GetMenuList(GetMenuListRequest) ([]entity.Menu, error)
 	BulkCreateMenu(BulkCreateMenuRequest) ([]entity.Menu, error)
 	BulkUpdateMenu(BulkUpdateMenuRequest) ([]entity.Menu, error)
-	GetMenu(GetMenuRequest) (*entity.Menu, error)
+	GetMenu(GetMenuRequest) (entity.Menu, error)
 }
 type menuUseCase struct {
 	menuRepository repository.MenuRepository
 }
+
+func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
+	return menuUseCase{menuRepository: r}
+}
+
 type CreateMenuRequest struct {
 	Name   string `json:"name"`
 	Date   int64  `json:"date"`
@@ -39,8 +44,9 @@ type GetMenuListRequest struct {
 	UserID int `json:"user_id"`
 }
 type GetMenuRequest struct {
-	ID   int   `json:"id"`
-	Date int64 `json:"date"`
+	ID     int   `json:"id"`
+	Date   int64 `json:"date"`
+	UserID int   `json:"user_id"`
 }
 type BulkCreateMenuRequest struct {
 	CreateRequests []CreateMenuRequest
@@ -49,17 +55,21 @@ type BulkUpdateMenuRequest struct {
 	UpdateRequests []UpdateMenuRequest
 }
 
-func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
-	return &menuUseCase{r}
+func (u menuUseCase) GetMenuList(r GetMenuListRequest) ([]entity.Menu, error) {
+	menus, err := u.menuRepository.GetList(r.WeekID, r.UserID)
+	if err != nil {
+		log.Println(err)
+	}
+	return menus, err
 }
 
-func (mu menuUseCase) BulkCreateMenu(bc BulkCreateMenuRequest) ([]entity.Menu, error) {
+func (u menuUseCase) BulkCreateMenu(r BulkCreateMenuRequest) ([]entity.Menu, error) {
 
 	var menus []entity.Menu
-	for _, mr := range bc.CreateRequests {
+	for _, mr := range r.CreateRequests {
 		menu := entity.Menu{
 			Name:   mr.Name,
-			Date:   time.Unix(mr.Date, 0).Format("2006/01/02 15:05:05"),
+			Date:   time.Unix(mr.Date, 0).Format("2006/01/02"),
 			Kind:   mr.Kind,
 			URL:    mr.URL,
 			UserID: mr.UserID,
@@ -67,19 +77,18 @@ func (mu menuUseCase) BulkCreateMenu(bc BulkCreateMenuRequest) ([]entity.Menu, e
 		}
 		menus = append(menus, menu)
 	}
-	menus, err := mu.menuRepository.BulkCreate(menus)
+	menus, err := u.menuRepository.BulkCreate(menus)
 	if err != nil {
 		log.Println(err)
 	}
 	return menus, err
 }
-func (mu menuUseCase) BulkUpdateMenu(bu BulkUpdateMenuRequest) ([]entity.Menu, error) {
+func (u menuUseCase) BulkUpdateMenu(r BulkUpdateMenuRequest) ([]entity.Menu, error) {
 	var menus []entity.Menu
-	for _, mr := range bu.UpdateRequests {
+	for _, mr := range r.UpdateRequests {
 		menu := entity.Menu{
 			ID:     mr.ID,
 			Name:   mr.Name,
-			Date:   time.Unix(mr.Date, 0).Format("2006/01/02 15:05:05"),
 			Kind:   mr.Kind,
 			URL:    mr.URL,
 			UserID: mr.UserID,
@@ -87,31 +96,23 @@ func (mu menuUseCase) BulkUpdateMenu(bu BulkUpdateMenuRequest) ([]entity.Menu, e
 		}
 		menus = append(menus, menu)
 	}
-	menus, err := mu.menuRepository.BulkUpdate(menus)
+	menus, err := u.menuRepository.BulkUpdate(menus)
 	if err != nil {
 		log.Println(err)
 	}
 	return menus, err
 }
-
-func (mu menuUseCase) GetMenu(gr GetMenuRequest) (*entity.Menu, error) {
-	var menu *entity.Menu
+func (u menuUseCase) GetMenu(r GetMenuRequest) (entity.Menu, error) {
+	var menu entity.Menu
 	var err error
-	if gr.ID != 0 {
-		menu, err = mu.menuRepository.GetByID(gr.ID)
+	if r.ID != 0 {
+		menu, err = u.menuRepository.GetByID(r.ID)
 		if err != nil {
 			log.Println(err)
 		}
-	} else if gr.Date != 0 {
-		menu, err = mu.menuRepository.GetByDate(gr.Date, gr.ID)
+	} else if r.Date != 0 {
+		menu, err = u.menuRepository.GetByDate(r.Date, r.UserID)
 	}
 	return menu, err
 
-}
-func (mu menuUseCase) GetMenuList(gr GetMenuListRequest) ([]entity.Menu, error) {
-	menus, err := mu.menuRepository.GetList(gr.WeekID, gr.UserID)
-	if err != nil {
-		log.Println(err)
-	}
-	return menus, err
 }
