@@ -55,6 +55,14 @@ type BulkUpdateMenuRequest struct {
 	UpdateRequests []UpdateMenuRequest
 }
 
+func (u menuUseCase) GetMenuList(r GetMenuListRequest) ([]entity.Menu, error) {
+	menus, err := u.menuRepository.GetList(r.WeekID, r.UserID)
+	if err != nil {
+		log.Println(err)
+	}
+	return menus, err
+}
+
 func (u menuUseCase) BulkCreateMenu(r BulkCreateMenuRequest) ([]entity.Menu, error) {
 
 	var menus []entity.Menu
@@ -107,11 +115,4 @@ func (u menuUseCase) GetMenu(r GetMenuRequest) (entity.Menu, error) {
 	}
 	return menu, err
 
-}
-func (u menuUseCase) GetMenuList(r GetMenuListRequest) ([]entity.Menu, error) {
-	menus, err := u.menuRepository.GetList(r.WeekID, r.UserID)
-	if err != nil {
-		log.Println(err)
-	}
-	return menus, err
 }

@@ -44,6 +44,6 @@ func (p menuPersistance) GetByDate(date int64, userID int) (entity.Menu, error) 
 func (p menuPersistance) GetList(weekID int, userID int) ([]entity.Menu, error) {
 	var menus []entity.Menu
 	Db := database.Db
-	err := Db.Where("week_id = ?", weekID).Where("user_id = ?", userID).Find(menus).Error
+	err := Db.Where("week_id = ?", weekID).Where("user_id = ?", userID).Find(&menus).Error
 	return menus, err
 }

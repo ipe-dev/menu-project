@@ -81,3 +81,19 @@ func TestGetMenu(t *testing.T) {
 		fmt.Println(m)
 	}
 }
+func TestGetMenuList(t *testing.T) {
+	database.Connect()
+	r := GetMenuListRequest{
+		WeekID: 1,
+		UserID: 1,
+	}
+	p := persistance.NewMenuPersistance()
+	menuUseCase := NewMenuUseCase(p)
+	m, e := menuUseCase.GetMenuList(r)
+	t.Log(m)
+	if e != nil {
+		t.Fatalf("failed test %#v", e)
+	} else {
+		fmt.Println(m)
+	}
+}
