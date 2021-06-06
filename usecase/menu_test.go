@@ -64,3 +64,20 @@ func TestUpdateMenu(t *testing.T) {
 		fmt.Println(m)
 	}
 }
+func TestGetMenu(t *testing.T) {
+	database.Connect()
+	time := time.Date(2021, 6, 4, 0, 0, 0, 0, time.Local).Unix()
+	r := GetMenuRequest{
+		Date:   time,
+		UserID: 1,
+	}
+	p := persistance.NewMenuPersistance()
+	menuUseCase := NewMenuUseCase(p)
+	m, e := menuUseCase.GetMenu(r)
+	fmt.Println(m)
+	if e != nil {
+		t.Fatalf("failed test %#v", e)
+	} else {
+		fmt.Println(m)
+	}
+}

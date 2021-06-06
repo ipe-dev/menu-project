@@ -44,8 +44,9 @@ type GetMenuListRequest struct {
 	UserID int `json:"user_id"`
 }
 type GetMenuRequest struct {
-	ID   int   `json:"id"`
-	Date int64 `json:"date"`
+	ID     int   `json:"id"`
+	Date   int64 `json:"date"`
+	UserID int   `json:"user_id"`
 }
 type BulkCreateMenuRequest struct {
 	CreateRequests []CreateMenuRequest
@@ -102,7 +103,7 @@ func (u menuUseCase) GetMenu(r GetMenuRequest) (entity.Menu, error) {
 			log.Println(err)
 		}
 	} else if r.Date != 0 {
-		menu, err = u.menuRepository.GetByDate(r.Date, r.ID)
+		menu, err = u.menuRepository.GetByDate(r.Date, r.UserID)
 	}
 	return menu, err
 
