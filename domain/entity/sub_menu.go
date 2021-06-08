@@ -1,9 +1,11 @@
 package entity
 
+import "time"
+
 type SubMenu struct {
 	ID        int
 	Name      string
 	MenuID    int
-	CreatedAt string
-	UpdatedAt string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

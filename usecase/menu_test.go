@@ -14,7 +14,7 @@ func TestCreateMenu(t *testing.T) {
 	database.Connect()
 	date := time.Now().AddDate(0, 0, 1).Unix()
 	r := CreateMenuRequest{
-		Name:   "ハンバーグ",
+		// Name:   "ハンバーグ",
 		Date:   date,
 		Kind:   entity.MenuKindLunch,
 		URL:    "https://www.google.com/",
