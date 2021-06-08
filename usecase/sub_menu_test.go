@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/ipe-dev/menu_project/infrastructure/database"
-	persistance "github.com/ipe-dev/menu_project/infrastructure/persistence"
+	"github.com/ipe-dev/menu_project/infrastructure/persistence"
 )
 
 func TestCreateSubMenu(t *testing.T) {
@@ -22,7 +22,7 @@ func TestCreateSubMenu(t *testing.T) {
 	requests = append(requests, r)
 	requests = append(requests, r2)
 	bulkRequest := BulkCreateSubMenuRequest{requests}
-	p := persistance.NewSubMenuPersistance()
+	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
 	m, e := menuUseCase.BulkCreateSubMenu(bulkRequest)
 	if e != nil {
@@ -35,7 +35,7 @@ func TestUpdateSubMenu(t *testing.T) {
 	database.Connect()
 	r := UpdateSubMenuRequest{
 		ID:   1,
-		Name: "aaa",
+		Name: "コブサラダ",
 	}
 	r2 := UpdateSubMenuRequest{
 		ID:   2,
@@ -45,7 +45,7 @@ func TestUpdateSubMenu(t *testing.T) {
 	requests = append(requests, r)
 	requests = append(requests, r2)
 	bulkRequest := BulkUpdateSubMenuRequest{requests}
-	p := persistance.NewSubMenuPersistance()
+	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
 	m, e := menuUseCase.BulkUpdateSubMenu(bulkRequest)
 	if e != nil {
@@ -60,7 +60,7 @@ func TestGetSubMenu(t *testing.T) {
 		ID:     1,
 		MenuID: 1,
 	}
-	p := persistance.NewSubMenuPersistance()
+	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
 	m, e := menuUseCase.GetSubMenu(r)
 	if e != nil {
@@ -74,7 +74,7 @@ func TestGetSubMenuList(t *testing.T) {
 	r := GetSubMenuListRequest{
 		MenuIDList: []int{1, 2, 3},
 	}
-	p := persistance.NewSubMenuPersistance()
+	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
 	m, e := menuUseCase.GetSubMenuList(r)
 	t.Log(m)

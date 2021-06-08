@@ -1,4 +1,4 @@
-package persistance
+package persistence
 
 import (
 	"github.com/ipe-dev/menu_project/domain/entity"
@@ -6,25 +6,25 @@ import (
 	"github.com/ipe-dev/menu_project/infrastructure/database"
 )
 
-type subMenuPersistance struct{}
+type subMenuPersistence struct{}
 
-func NewSubMenuPersistance() repository.SubMenuRepository {
-	return &subMenuPersistance{}
+func NewSubMenuPersistence() repository.SubMenuRepository {
+	return &subMenuPersistence{}
 }
-func (p subMenuPersistance) GetByMenuID(MenuID int) ([]entity.SubMenu, error) {
+func (p subMenuPersistence) GetByMenuID(MenuID int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
 	err := Db.Table("sub_menus").Where("menu_id = ?", MenuID).Find(&submenus).Error
 	return submenus, err
 }
-func (p subMenuPersistance) GetList(MenuIDList []int) ([]entity.SubMenu, error) {
+func (p subMenuPersistence) GetList(MenuIDList []int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
 	err := Db.Where("menu_id IN ?", MenuIDList).Find(&submenus).Error
 	return submenus, err
 }
 
-func (p subMenuPersistance) BulkCreate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
+func (p subMenuPersistence) BulkCreate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
 	Db := database.Db
 	tx := Db.Begin()
 	err := tx.Create(&submenus).Error
@@ -34,7 +34,7 @@ func (p subMenuPersistance) BulkCreate(submenus []entity.SubMenu) ([]entity.SubM
 	tx.Commit()
 	return submenus, err
 }
-func (p subMenuPersistance) BulkUpdate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
+func (p subMenuPersistence) BulkUpdate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {
 	Db := database.Db
 	tx := Db.Begin()
 	var err error

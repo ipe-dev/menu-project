@@ -7,14 +7,14 @@ import (
 
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/infrastructure/database"
-	persistance "github.com/ipe-dev/menu_project/infrastructure/persistence"
+	persistence "github.com/ipe-dev/menu_project/infrastructure/persistence"
 )
 
 func TestCreateMenu(t *testing.T) {
 	database.Connect()
 	date := time.Now().AddDate(0, 0, 1).Unix()
 	r := CreateMenuRequest{
-		// Name:   "ハンバーグ",
+		Name:   "ハンバーグ",
 		Date:   date,
 		Kind:   entity.MenuKindLunch,
 		URL:    "https://www.google.com/",
@@ -33,7 +33,7 @@ func TestCreateMenu(t *testing.T) {
 	requests = append(requests, r)
 	requests = append(requests, r2)
 	bulkRequest := BulkCreateMenuRequest{requests}
-	p := persistance.NewMenuPersistance()
+	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.BulkCreateMenu(bulkRequest)
 	if e != nil {
@@ -55,7 +55,7 @@ func TestUpdateMenu(t *testing.T) {
 	var requests []UpdateMenuRequest
 	requests = append(requests, r)
 	bulkRequest := BulkUpdateMenuRequest{requests}
-	p := persistance.NewMenuPersistance()
+	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.BulkUpdateMenu(bulkRequest)
 	if e != nil {
@@ -71,7 +71,7 @@ func TestGetMenu(t *testing.T) {
 		Date:   time,
 		UserID: 1,
 	}
-	p := persistance.NewMenuPersistance()
+	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.GetMenu(r)
 	fmt.Println(m)
@@ -87,7 +87,7 @@ func TestGetMenuList(t *testing.T) {
 		WeekID: 1,
 		UserID: 1,
 	}
-	p := persistance.NewMenuPersistance()
+	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.GetMenuList(r)
 	t.Log(m)
