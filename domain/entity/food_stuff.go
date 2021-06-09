@@ -6,6 +6,6 @@ type FoodStuff struct {
 	ID        int
 	MenuID    int
 	Name      string
-	CreateAt  time.Time
+	CreatedAt time.Time
 	UpdatedAt time.Time
 }
