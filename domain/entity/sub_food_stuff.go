@@ -11,5 +11,5 @@ type SubFoodStuff struct {
 	UpdatedAt time.Time
 }
 
-const BuyStatusTrue = 1
-const BuyStatusFalse = 0
+const BuySubFoodStatusTrue = 1
+const BuySubFoodStatusFalse = 0
