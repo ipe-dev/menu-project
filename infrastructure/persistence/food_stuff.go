@@ -38,3 +38,8 @@ func (p foodStuffPersistence) BulkUpdate(FoodStuffs []entity.FoodStuff) ([]entit
 	}
 	return res, err
 }
+func (p foodStuffPersistence) ChangeBuyStatus(ID int, Status int) error {
+	tx := database.Db.Begin()
+	err := tx.Table("food_stuffs").Where("id = ?", ID).Update("buy_status", Status).Error
+	return err
+}
