@@ -10,6 +10,7 @@ type FoodStuffUseCase interface {
 	GetFoodStuffList(GetFoodStuffListRequest) ([]entity.FoodStuff, error)
 	BulkCreateFoodStuff(BulkCreateFoodStuffRequest) ([]entity.FoodStuff, error)
 	BulkUpdateFoodStuff(BulkUpdateFoodStuffRequest) ([]entity.FoodStuff, error)
+	ChangeBuyStatus(ChangeFoodStuffStatusRequest) error
 }
 type foodStuffUseCase struct {
 	foodStuffRepository repository.FoodStuffRepository
@@ -39,6 +40,10 @@ type UpdateFoodStuffRequest struct {
 }
 type BulkUpdateFoodStuffRequest struct {
 	UpdateRequests []UpdateFoodStuffRequest
+}
+type ChangeFoodStuffStatusRequest struct {
+	ID     int
+	Status int
 }
 
 func (u foodStuffUseCase) GetFoodStuff(r GetFoodStuffRequest) (entity.FoodStuff, error) {
@@ -76,4 +81,9 @@ func (u foodStuffUseCase) BulkUpdateFoodStuff(r BulkUpdateFoodStuffRequest) ([]e
 	}
 	foodstuffs, err := u.foodStuffRepository.BulkUpdate(foodstuffs)
 	return foodstuffs, err
+}
+
+func (u foodStuffUseCase) ChangeBuyStatus(r ChangeFoodStuffStatusRequest) error {
+	err := u.foodStuffRepository.ChangeBuyStatus(r.ID, r.Status)
+	return err
 }

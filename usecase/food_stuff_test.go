@@ -68,6 +68,7 @@ func TestGetFoodStuff(t *testing.T) {
 		t.Log(m)
 	}
 }
+
 func TestGetFoodStuffList(t *testing.T) {
 	database.Connect()
 	r := GetFoodStuffListRequest{
@@ -81,5 +82,18 @@ func TestGetFoodStuffList(t *testing.T) {
 		t.Fatalf("failed test %#v", e)
 	} else {
 		fmt.Println(m)
+	}
+}
+func TestChangeFoodStuffStatus(t *testing.T) {
+	database.Connect()
+	r := ChangeFoodStuffStatusRequest{
+		ID:     1,
+		Status: 1,
+	}
+	p := persistence.NewFoodStuffPersistence()
+	menuUseCase := NewFoodStuffUseCase(p)
+	e := menuUseCase.ChangeBuyStatus(r)
+	if e != nil {
+		t.Fatalf("failed test %#v", e)
 	}
 }

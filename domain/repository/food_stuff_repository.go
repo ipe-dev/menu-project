@@ -7,4 +7,5 @@ type FoodStuffRepository interface {
 	GetList(MenuIDList []int) ([]entity.FoodStuff, error)
 	BulkCreate([]entity.FoodStuff) ([]entity.FoodStuff, error)
 	BulkUpdate([]entity.FoodStuff) ([]entity.FoodStuff, error)
+	ChangeBuyStatus(ID int, Status int) error
 }
