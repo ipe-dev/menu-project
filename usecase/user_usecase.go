@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
+	"github.com/ipe-dev/menu_project/domain/service"
 )
 
 type UserUseCase interface {
@@ -53,8 +54,15 @@ func (u userUseCase) Create(r CreateUserRequest) error {
 		LoginID:  r.LoginID,
 		Password: r.Password,
 	}
-
 	var err error
+	var result bool
+	err, result = service.CheckUserExists(r.LoginID)
+	if err != nil {
+		return err
+	}
+	if result {
+		return err
+	}
 	err = u.userRepository.Create(user)
 	return err
 }
