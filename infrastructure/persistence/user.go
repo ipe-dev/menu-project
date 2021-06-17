@@ -39,3 +39,15 @@ func (p userPersistence) Get(ID int) entity.User {
 
 	return user
 }
+func (p userPersistence) Login(LoginID string, Password string) (bool, entity.User) {
+	Db := database.Db
+	var user entity.User
+	var isLogin bool
+	err := Db.Model(user).Where("login_id = ?", LoginID).Where("password = ?", Password).Find(&user).Error
+	if user.ID != 0 && err == nil {
+		isLogin = true
+	} else {
+		isLogin = false
+	}
+	return isLogin, user
+}

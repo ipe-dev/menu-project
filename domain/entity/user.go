@@ -10,3 +10,11 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+func (u User) Login() {
+
+}
+
+func (u User) Logout() {
+
+}
