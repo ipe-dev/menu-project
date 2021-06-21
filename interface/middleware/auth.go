@@ -31,7 +31,7 @@ func (m authMiddleware) NewGinJWTMiddleware(c *gin.Context) (*jwt.GinJWTMiddlewa
 			c.BindJSON(&r)
 			user, ok := m.UserUseCase.LoginAuthenticate(r)
 			if ok {
-				return user, nil
+				return *user, nil
 			}
 			return nil, jwt.ErrFailedAuthentication
 		},

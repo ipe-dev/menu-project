@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"log"
+
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/entity/value"
 	"github.com/ipe-dev/menu_project/domain/repository"
@@ -91,6 +93,13 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, bool) {
 	Password := value.NewPassword(r.Password)
 	GetUser, err := u.userService.LoginAuthentication(r.LoginID, Password)
-	return GetUser, err
+	if err != nil {
+		log.Println(err)
+		return nil, false
+	}
+	if GetUser == nil {
+		return nil, false
+	}
+	return GetUser, true
 
 }
