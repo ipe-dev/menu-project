@@ -1,11 +1,9 @@
 package entity
 
 import (
-	"log"
 	"time"
 
 	"github.com/ipe-dev/menu_project/domain/entity/value"
-	"github.com/ipe-dev/menu_project/domain/repository"
 )
 
 type UserOption func(*User)
@@ -18,7 +16,7 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-func IDOption(ID int) UserOption {
+func UserIDOption(ID int) UserOption {
 	return func(u *User) {
 		if ID != 0 {
 			u.ID = ID
@@ -53,13 +51,4 @@ func NewUser(opts ...UserOption) *User {
 		opt(user)
 	}
 	return user
-}
-
-func (u *User) LoginAuthentication() (*User, error) {
-	GetUser, err := repository.UserRepository.GetByLoginIDAndPassword(u.LoginID, u.Password)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return GetUser, err
 }

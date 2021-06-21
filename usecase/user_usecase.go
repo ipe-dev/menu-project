@@ -2,23 +2,24 @@ package usecase
 
 import (
 	"github.com/ipe-dev/menu_project/domain/entity"
+	"github.com/ipe-dev/menu_project/domain/entity/value"
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/domain/service"
 )
 
 type UserUseCase interface {
-	Get(GetUserRequest) entity.User
+	Get(GetUserRequest) (*entity.User, error)
 	Create(CreateUserRequest) error
 	Update(UpdateUserRequest) error
-	Login(LoginRequest) error
-	Logout(LogoutRequest) error
+	LoginAuthenticate(LoginRequest) (*entity.User, bool)
 }
 type userUseCase struct {
 	userRepository repository.UserRepository
+	userService    service.UserService
 }
 
-func NewUserUseCase(r repository.UserRepository) userUseCase {
-	return &userUseCase{r}
+func NewUserUseCase(r repository.UserRepository, s service.UserService) userUseCase {
+	return &userUseCase{r, s}
 }
 
 type GetUserRequest struct {
@@ -43,38 +44,53 @@ type LogoutRequest struct {
 	ID int `json"id" validate:"required"`
 }
 
-func (u userUseCase) Get(r GetUserRequest) entity.User {
-	user := u.userRepository.Get(r.ID)
-	return user
+func (u userUseCase) Get(r GetUserRequest) (*entity.User, error) {
+	user, err := u.userRepository.Get(r.ID)
+	return user, err
 }
 
 func (u userUseCase) Create(r CreateUserRequest) error {
-	user := entity.User{
-		Name:     r.Name,
-		LoginID:  r.LoginID,
-		Password: r.Password,
-	}
-	var err error
-	var result bool
-	err, result = service.CheckUserExists(r.LoginID)
+
+	// ログインID使用済みチェック
+	exists, err := u.userService.CheckUserExists(r.LoginID)
 	if err != nil {
 		return err
 	}
-	if result {
+	if exists {
+		// TODO: カスタムエラー作る
 		return err
 	}
-	err = u.userRepository.Create(user)
+	user := entity.NewUser(
+		entity.UserNameOption(r.Name),
+		entity.LoginIDOption(r.LoginID),
+		entity.PasswordOption(r.Password),
+	)
+	err = u.userRepository.Create(*user)
 	return err
 }
 func (u userUseCase) Update(r UpdateUserRequest) error {
-	user := entity.User{
-		ID:       r.ID,
-		Name:     r.Name,
-		LoginID:  r.LoginID,
-		Password: r.Password,
+	// ログインID使用済みチェック
+	exists, err := u.userService.CheckUserExists(r.LoginID)
+	if err != nil {
+		return err
 	}
+	if exists {
+		// TODO: カスタムエラー作る
+		return err
+	}
+	user := entity.NewUser(
+		entity.UserIDOption(r.ID),
+		entity.UserNameOption(r.Name),
+		entity.LoginIDOption(r.LoginID),
+		entity.PasswordOption(r.Password),
+	)
 
-	var err error
-	err = u.userRepository.Update(user)
+	err = u.userRepository.Update(*user)
 	return err
+}
+func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, bool) {
+	Password := value.NewPassword(r.Password)
+	GetUser, err := u.userService.LoginAuthentication(r.LoginID, Password)
+	return GetUser, err
+
 }
