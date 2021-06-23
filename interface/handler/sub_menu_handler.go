@@ -8,9 +8,10 @@ import (
 )
 
 type SubMenuHandler interface {
-	HandleBulkCreateSubMenu(c *gin.Context) gin.HandlerFunc
-	HandleBulkUpdateSubMenu(c *gin.Context) gin.HandlerFunc
-	HandleGetListSubMenu(c *gin.Context) gin.HandlerFunc
+	HandleBulkCreate() gin.HandlerFunc
+	HandleBulkUpdate() gin.HandlerFunc
+	HandleGetList() gin.HandlerFunc
+	HandleGet() gin.HandlerFunc
 }
 type subMenuHandler struct {
 	subMenuUseCase usecase.SubMenuUseCase
@@ -20,7 +21,7 @@ func NewSubMenuHandler(su usecase.SubMenuUseCase) SubMenuHandler {
 	return subMenuHandler{subMenuUseCase: su}
 }
 
-func (h subMenuHandler) HandleGetSubMenu(c *gin.Context) gin.HandlerFunc {
+func (h subMenuHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubMenuRequest
 		c.BindJSON(&r)
@@ -33,7 +34,7 @@ func (h subMenuHandler) HandleGetSubMenu(c *gin.Context) gin.HandlerFunc {
 	}
 }
 
-func (h subMenuHandler) HandleBulkCreateSubMenu(c *gin.Context) gin.HandlerFunc {
+func (h subMenuHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateSubMenuRequest
 		c.BindJSON(&r)
@@ -45,7 +46,7 @@ func (h subMenuHandler) HandleBulkCreateSubMenu(c *gin.Context) gin.HandlerFunc 
 		}
 	}
 }
-func (h subMenuHandler) HandleBulkUpdateSubMenu(c *gin.Context) gin.HandlerFunc {
+func (h subMenuHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateSubMenuRequest
 		c.BindJSON(&r)
@@ -57,7 +58,7 @@ func (h subMenuHandler) HandleBulkUpdateSubMenu(c *gin.Context) gin.HandlerFunc 
 		}
 	}
 }
-func (h subMenuHandler) HandleGetListSubMenu(c *gin.Context) gin.HandlerFunc {
+func (h subMenuHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubMenuListRequest
 		c.BindJSON(&r)

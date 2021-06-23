@@ -9,10 +9,10 @@ import (
 )
 
 type MenuUseCase interface {
-	GetMenuList(GetMenuListRequest) ([]entity.Menu, error)
-	BulkCreateMenu(BulkCreateMenuRequest) ([]entity.Menu, error)
-	BulkUpdateMenu(BulkUpdateMenuRequest) ([]entity.Menu, error)
-	GetMenu(GetMenuRequest) (entity.Menu, error)
+	GetList(GetMenuListRequest) ([]entity.Menu, error)
+	BulkCreate(BulkCreateMenuRequest) ([]entity.Menu, error)
+	BulkUpdate(BulkUpdateMenuRequest) ([]entity.Menu, error)
+	Get(GetMenuRequest) (entity.Menu, error)
 }
 type menuUseCase struct {
 	menuRepository repository.MenuRepository
@@ -63,7 +63,7 @@ func (u menuUseCase) GetMenuList(r GetMenuListRequest) ([]entity.Menu, error) {
 	return menus, err
 }
 
-func (u menuUseCase) BulkCreateMenu(r BulkCreateMenuRequest) ([]entity.Menu, error) {
+func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) {
 
 	var menus []entity.Menu
 	for _, mr := range r.CreateRequests {
@@ -83,7 +83,7 @@ func (u menuUseCase) BulkCreateMenu(r BulkCreateMenuRequest) ([]entity.Menu, err
 	}
 	return menus, err
 }
-func (u menuUseCase) BulkUpdateMenu(r BulkUpdateMenuRequest) ([]entity.Menu, error) {
+func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) ([]entity.Menu, error) {
 	var menus []entity.Menu
 	for _, mr := range r.UpdateRequests {
 		menu := entity.Menu{
@@ -102,7 +102,7 @@ func (u menuUseCase) BulkUpdateMenu(r BulkUpdateMenuRequest) ([]entity.Menu, err
 	}
 	return menus, err
 }
-func (u menuUseCase) GetMenu(r GetMenuRequest) (entity.Menu, error) {
+func (u menuUseCase) Get(r GetMenuRequest) (entity.Menu, error) {
 	var menu entity.Menu
 	var err error
 	if r.ID != 0 {

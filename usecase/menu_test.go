@@ -35,7 +35,7 @@ func TestCreateMenu(t *testing.T) {
 	bulkRequest := BulkCreateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
-	m, e := menuUseCase.BulkCreateMenu(bulkRequest)
+	m, e := menuUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -57,7 +57,7 @@ func TestUpdateMenu(t *testing.T) {
 	bulkRequest := BulkUpdateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
-	m, e := menuUseCase.BulkUpdateMenu(bulkRequest)
+	m, e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -73,7 +73,7 @@ func TestGetMenu(t *testing.T) {
 	}
 	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
-	m, e := menuUseCase.GetMenu(r)
+	m, e := menuUseCase.Get(r)
 	fmt.Println(m)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
@@ -89,7 +89,7 @@ func TestGetMenuList(t *testing.T) {
 	}
 	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
-	m, e := menuUseCase.GetMenuList(r)
+	m, e := menuUseCase.GetList(r)
 	t.Log(m)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)

@@ -6,11 +6,11 @@ import (
 )
 
 type SubFoodStuffUseCase interface {
-	GetSubFoodStuff(GetSubFoodStuffRequest) (entity.SubFoodStuff, error)
-	GetSubFoodStuffList(GetSubFoodStuffListRequest) ([]entity.SubFoodStuff, error)
-	BulkCreateSubFoodStuff(BulkCreateSubFoodStuffRequest) ([]entity.SubFoodStuff, error)
-	BulkUpdateSubFoodStuff(BulkUpdateSubFoodStuffRequest) ([]entity.SubFoodStuff, error)
-	ChangeBuyStatus(ChangeSubBuyStatusRequest) error
+	Get(GetSubFoodStuffRequest) (entity.SubFoodStuff, error)
+	GetList(GetSubFoodStuffListRequest) ([]entity.SubFoodStuff, error)
+	BulkCreate(BulkCreateSubFoodStuffRequest) ([]entity.SubFoodStuff, error)
+	BulkUpdate(BulkUpdateSubFoodStuffRequest) ([]entity.SubFoodStuff, error)
+	ChangeStatus(ChangeSubBuyStatusRequest) error
 }
 type subFoodStuffUseCase struct {
 	subFoodStuffRepository repository.SubFoodStuffRepository
@@ -46,18 +46,18 @@ type ChangeSubBuyStatusRequest struct {
 	Status int `json:"status"`
 }
 
-func (u subFoodStuffUseCase) GetSubFoodStuff(r GetSubFoodStuffRequest) (entity.SubFoodStuff, error) {
+func (u subFoodStuffUseCase) Get(r GetSubFoodStuffRequest) (entity.SubFoodStuff, error) {
 	var foodstuff entity.SubFoodStuff
 	var err error
 	foodstuff, err = u.subFoodStuffRepository.GetBySubMenuID(r.SubMenuID)
 	return foodstuff, err
 }
 
-func (u subFoodStuffUseCase) GetSubFoodStuffList(r GetSubFoodStuffListRequest) ([]entity.SubFoodStuff, error) {
+func (u subFoodStuffUseCase) GetList(r GetSubFoodStuffListRequest) ([]entity.SubFoodStuff, error) {
 	foodstuffs, err := u.subFoodStuffRepository.GetList(r.SubMenuIDList)
 	return foodstuffs, err
 }
-func (u subFoodStuffUseCase) BulkCreateSubFoodStuff(r BulkCreateSubFoodStuffRequest) ([]entity.SubFoodStuff, error) {
+func (u subFoodStuffUseCase) BulkCreate(r BulkCreateSubFoodStuffRequest) ([]entity.SubFoodStuff, error) {
 	var foodstuffs []entity.SubFoodStuff
 	for _, v := range r.CreateRequests {
 		foodstuff := entity.SubFoodStuff{
@@ -69,7 +69,7 @@ func (u subFoodStuffUseCase) BulkCreateSubFoodStuff(r BulkCreateSubFoodStuffRequ
 	foodstuffs, err := u.subFoodStuffRepository.BulkCreate(foodstuffs)
 	return foodstuffs, err
 }
-func (u subFoodStuffUseCase) BulkUpdateSubFoodStuff(r BulkUpdateSubFoodStuffRequest) ([]entity.SubFoodStuff, error) {
+func (u subFoodStuffUseCase) BulkUpdate(r BulkUpdateSubFoodStuffRequest) ([]entity.SubFoodStuff, error) {
 	var foodstuffs []entity.SubFoodStuff
 	for _, v := range r.UpdateRequests {
 		foodstuff := entity.SubFoodStuff{
@@ -82,7 +82,7 @@ func (u subFoodStuffUseCase) BulkUpdateSubFoodStuff(r BulkUpdateSubFoodStuffRequ
 	foodstuffs, err := u.subFoodStuffRepository.BulkUpdate(foodstuffs)
 	return foodstuffs, err
 }
-func (u subFoodStuffUseCase) ChangeBuyStatus(r ChangeSubBuyStatusRequest) error {
+func (u subFoodStuffUseCase) ChangeStatus(r ChangeSubBuyStatusRequest) error {
 	err := u.subFoodStuffRepository.ChangeBuyStatus(r.ID, r.Status)
 	return err
 }
