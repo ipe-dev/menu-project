@@ -30,7 +30,6 @@ func (s userService) CheckUserExists(LoginID string) (bool, error) {
 	return user != nil, err
 }
 func (s userService) LoginAuthentication(LoginID string, Password value.Password) (*entity.User, error) {
-
-	GetUser, err := repository.UserRepository.GetByLoginIDAndPassword(LoginID, Password)
+	GetUser, err := s.UserRepository.GetByLoginIDAndPassword(LoginID, Password)
 	return GetUser, err
 }
