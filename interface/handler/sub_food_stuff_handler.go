@@ -26,7 +26,7 @@ func (h subFoodStuffHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubFoodStuffRequest
 		c.BindJSON(&r)
-		m, e := h.subFoodStuffUseCase.GetSubFoodStuff(r)
+		m, e := h.subFoodStuffUseCase.Get(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -39,7 +39,7 @@ func (h subFoodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateSubFoodStuffRequest
 		c.BindJSON(&r)
-		m, e := h.subFoodStuffUseCase.BulkCreateSubFoodStuff(r)
+		m, e := h.subFoodStuffUseCase.BulkCreate(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -51,7 +51,7 @@ func (h subFoodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateSubFoodStuffRequest
 		c.BindJSON(&r)
-		m, e := h.subFoodStuffUseCase.BulkUpdateSubFoodStuff(r)
+		m, e := h.subFoodStuffUseCase.BulkUpdate(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -63,7 +63,7 @@ func (h subFoodStuffHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubFoodStuffListRequest
 		c.BindJSON(&r)
-		m, e := h.subFoodStuffUseCase.GetSubFoodStuffList(r)
+		m, e := h.subFoodStuffUseCase.GetList(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -75,7 +75,7 @@ func (h subFoodStuffHandler) HandleChangeStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.ChangeSubBuyStatusRequest
 		c.BindJSON(&r)
-		e := h.subFoodStuffUseCase.ChangeBuyStatus(r)
+		e := h.subFoodStuffUseCase.ChangeStatus(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
