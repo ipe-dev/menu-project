@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/domain/service"
+	"github.com/ipe-dev/menu_project/infrastructure/database"
 	"github.com/ipe-dev/menu_project/infrastructure/persistence"
 	"github.com/ipe-dev/menu_project/interface/handler"
 	"github.com/ipe-dev/menu_project/interface/middleware"
@@ -12,7 +13,7 @@ import (
 )
 
 func init() {
-
+	database.Connect()
 }
 func main() {
 	r := gin.Default()
@@ -80,7 +81,7 @@ func main() {
 		foodstuff.POST("/status", foodStuffHandler.HandleChangeBuyStatus())
 	}
 
-	// food_stuff
+	// sub_food_stuff
 	subFoodStuffPersistence := persistence.NewSubFoodStuffPersistence()
 	subFoodStuffUseCase := usecase.NewSubFoodStuffUseCase(subFoodStuffPersistence)
 	subFoodStuffHandler := handler.NewSubFoodStuffHandler(subFoodStuffUseCase)
