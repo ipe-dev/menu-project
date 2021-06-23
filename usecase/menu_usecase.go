@@ -55,7 +55,7 @@ type BulkUpdateMenuRequest struct {
 	UpdateRequests []UpdateMenuRequest
 }
 
-func (u menuUseCase) GetMenuList(r GetMenuListRequest) ([]entity.Menu, error) {
+func (u menuUseCase) GetList(r GetMenuListRequest) ([]entity.Menu, error) {
 	menus, err := u.menuRepository.GetList(r.WeekID, r.UserID)
 	if err != nil {
 		log.Println(err)
