@@ -8,11 +8,11 @@ import (
 )
 
 type SubFoodStuffHandler interface {
-	HandleBulkCreateSubFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleBulkUpdateSubFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleGetListSubFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleGetSubFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleChangeStatus(c *gin.Context) gin.HandlerFunc
+	HandleBulkCreate() gin.HandlerFunc
+	HandleBulkUpdate() gin.HandlerFunc
+	HandleGetList() gin.HandlerFunc
+	HandleGet() gin.HandlerFunc
+	HandleChangeStatus() gin.HandlerFunc
 }
 type subFoodStuffHandler struct {
 	subFoodStuffUseCase usecase.SubFoodStuffUseCase
@@ -22,7 +22,7 @@ func NewSubFoodStuffHandler(u usecase.SubFoodStuffUseCase) SubFoodStuffHandler {
 	return subFoodStuffHandler{subFoodStuffUseCase: u}
 }
 
-func (h subFoodStuffHandler) HandleGetSubFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h subFoodStuffHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubFoodStuffRequest
 		c.BindJSON(&r)
@@ -35,7 +35,7 @@ func (h subFoodStuffHandler) HandleGetSubFoodStuff(c *gin.Context) gin.HandlerFu
 	}
 }
 
-func (h subFoodStuffHandler) HandleBulkCreateSubFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h subFoodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateSubFoodStuffRequest
 		c.BindJSON(&r)
@@ -47,7 +47,7 @@ func (h subFoodStuffHandler) HandleBulkCreateSubFoodStuff(c *gin.Context) gin.Ha
 		}
 	}
 }
-func (h subFoodStuffHandler) HandleBulkUpdateSubFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h subFoodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateSubFoodStuffRequest
 		c.BindJSON(&r)
@@ -59,7 +59,7 @@ func (h subFoodStuffHandler) HandleBulkUpdateSubFoodStuff(c *gin.Context) gin.Ha
 		}
 	}
 }
-func (h subFoodStuffHandler) HandleGetListSubFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h subFoodStuffHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubFoodStuffListRequest
 		c.BindJSON(&r)
@@ -71,7 +71,7 @@ func (h subFoodStuffHandler) HandleGetListSubFoodStuff(c *gin.Context) gin.Handl
 		}
 	}
 }
-func (h subFoodStuffHandler) HandleChangeStatus(c *gin.Context) gin.HandlerFunc {
+func (h subFoodStuffHandler) HandleChangeStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.ChangeSubBuyStatusRequest
 		c.BindJSON(&r)

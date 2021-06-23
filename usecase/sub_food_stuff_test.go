@@ -24,7 +24,7 @@ func TestCreateSubFoodStuff(t *testing.T) {
 	bulkRequest := BulkCreateSubFoodStuffRequest{requests}
 	p := persistence.NewSubFoodStuffPersistence()
 	subFoodStuffUseCase := NewSubFoodStuffUseCase(p)
-	m, e := subFoodStuffUseCase.BulkCreateSubFoodStuff(bulkRequest)
+	m, e := subFoodStuffUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -47,7 +47,7 @@ func TestUpdateSubFoodStuff(t *testing.T) {
 	bulkRequest := BulkUpdateSubFoodStuffRequest{requests}
 	p := persistence.NewSubFoodStuffPersistence()
 	menuUseCase := NewSubFoodStuffUseCase(p)
-	m, e := menuUseCase.BulkUpdateSubFoodStuff(bulkRequest)
+	m, e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -61,7 +61,7 @@ func TestGetSubFoodStuff(t *testing.T) {
 	}
 	p := persistence.NewSubFoodStuffPersistence()
 	menuUseCase := NewSubFoodStuffUseCase(p)
-	m, e := menuUseCase.GetSubFoodStuff(r)
+	m, e := menuUseCase.Get(r)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -75,7 +75,7 @@ func TestGetSubFoodStuffList(t *testing.T) {
 	}
 	p := persistence.NewSubFoodStuffPersistence()
 	menuUseCase := NewSubFoodStuffUseCase(p)
-	m, e := menuUseCase.GetSubFoodStuffList(r)
+	m, e := menuUseCase.GetList(r)
 	t.Log(m)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
@@ -91,7 +91,7 @@ func TestChangeBuyStatus(t *testing.T) {
 	}
 	p := persistence.NewSubFoodStuffPersistence()
 	usecase := NewSubFoodStuffUseCase(p)
-	e := usecase.ChangeBuyStatus(r)
+	e := usecase.ChangeStatus(r)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {

@@ -8,10 +8,11 @@ import (
 )
 
 type FoodStuffHandler interface {
-	HandleBulkCreateFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleBulkUpdateFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleGetListFoodStuff(c *gin.Context) gin.HandlerFunc
-	HandleGetFoodStuff(c *gin.Context) gin.HandlerFunc
+	HandleBulkCreate() gin.HandlerFunc
+	HandleBulkUpdate() gin.HandlerFunc
+	HandleGetList() gin.HandlerFunc
+	HandleGet() gin.HandlerFunc
+	HandleChangeBuyStatus() gin.HandlerFunc
 }
 type foodStuffHandler struct {
 	foodStuffUseCase usecase.FoodStuffUseCase
@@ -21,11 +22,11 @@ func NewFoodStuffHandler(u usecase.FoodStuffUseCase) FoodStuffHandler {
 	return foodStuffHandler{foodStuffUseCase: u}
 }
 
-func (h foodStuffHandler) HandleGetFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h foodStuffHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetFoodStuffRequest
 		c.BindJSON(&r)
-		f, e := h.foodStuffUseCase.GetFoodStuff(r)
+		f, e := h.foodStuffUseCase.Get(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -34,11 +35,11 @@ func (h foodStuffHandler) HandleGetFoodStuff(c *gin.Context) gin.HandlerFunc {
 	}
 }
 
-func (h foodStuffHandler) HandleBulkCreateFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h foodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateFoodStuffRequest
 		c.BindJSON(&r)
-		f, e := h.foodStuffUseCase.BulkCreateFoodStuff(r)
+		f, e := h.foodStuffUseCase.BulkCreate(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -46,11 +47,11 @@ func (h foodStuffHandler) HandleBulkCreateFoodStuff(c *gin.Context) gin.HandlerF
 		}
 	}
 }
-func (h foodStuffHandler) HandleBulkUpdateFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h foodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateFoodStuffRequest
 		c.BindJSON(&r)
-		f, e := h.foodStuffUseCase.BulkUpdateFoodStuff(r)
+		f, e := h.foodStuffUseCase.BulkUpdate(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -58,11 +59,11 @@ func (h foodStuffHandler) HandleBulkUpdateFoodStuff(c *gin.Context) gin.HandlerF
 		}
 	}
 }
-func (h foodStuffHandler) HandleGetListFoodStuff(c *gin.Context) gin.HandlerFunc {
+func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetFoodStuffListRequest
 		c.BindJSON(&r)
-		f, e := h.foodStuffUseCase.GetFoodStuffList(r)
+		f, e := h.foodStuffUseCase.GetList(r)
 		if e != nil {
 			c.JSON(http.StatusBadRequest, gin.H{})
 		} else {
@@ -70,7 +71,7 @@ func (h foodStuffHandler) HandleGetListFoodStuff(c *gin.Context) gin.HandlerFunc
 		}
 	}
 }
-func (h foodStuffHandler) ChangeBuyStatus(c *gin.Context) gin.HandlerFunc {
+func (h foodStuffHandler) HandleChangeBuyStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.ChangeFoodStuffStatusRequest
 		c.BindJSON(&r)

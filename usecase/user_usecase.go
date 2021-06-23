@@ -20,7 +20,7 @@ type userUseCase struct {
 	userService    service.UserService
 }
 
-func NewUserUseCase(r repository.UserRepository, s service.UserService) userUseCase {
+func NewUserUseCase(r repository.UserRepository, s service.UserService) UserUseCase {
 	return &userUseCase{r, s}
 }
 

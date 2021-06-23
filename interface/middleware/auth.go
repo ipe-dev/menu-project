@@ -10,7 +10,7 @@ import (
 )
 
 type AuthMiddleware interface {
-	NewGinJWTMiddleware(c *gin.Context) (*jwt.GinJWTMiddleware, error)
+	NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error)
 }
 
 func NewAuthMddleware(u usecase.UserUseCase) AuthMiddleware {
@@ -21,7 +21,7 @@ type authMiddleware struct {
 	usecase.UserUseCase
 }
 
-func (m authMiddleware) NewGinJWTMiddleware(c *gin.Context) (*jwt.GinJWTMiddleware, error) {
+func (m authMiddleware) NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
 	authMiddleWare, err := jwt.New(&jwt.GinJWTMiddleware{
 		Key:        []byte(os.Getenv("SECRET")),
 		Timeout:    time.Hour,

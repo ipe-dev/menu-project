@@ -6,10 +6,10 @@ import (
 )
 
 type SubMenuUseCase interface {
-	GetSubMenu(GetSubMenuRequest) ([]entity.SubMenu, error)
-	GetSubMenuList(GetSubMenuListRequest) ([]entity.SubMenu, error)
-	BulkCreateSubMenu(BulkCreateSubMenuRequest) ([]entity.SubMenu, error)
-	BulkUpdateSubMenu(BulkUpdateSubMenuRequest) ([]entity.SubMenu, error)
+	Get(GetSubMenuRequest) ([]entity.SubMenu, error)
+	GetList(GetSubMenuListRequest) ([]entity.SubMenu, error)
+	BulkCreate(BulkCreateSubMenuRequest) ([]entity.SubMenu, error)
+	BulkUpdate(BulkUpdateSubMenuRequest) ([]entity.SubMenu, error)
 }
 type subMenuUseCase struct {
 	subMenuRepository repository.SubMenuRepository
@@ -43,7 +43,7 @@ type BulkUpdateSubMenuRequest struct {
 	UpdateRequests []UpdateSubMenuRequest
 }
 
-func (u subMenuUseCase) GetSubMenu(r GetSubMenuRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) Get(r GetSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	var err error
 	if r.ID != 0 {
@@ -52,11 +52,11 @@ func (u subMenuUseCase) GetSubMenu(r GetSubMenuRequest) ([]entity.SubMenu, error
 	return submenus, err
 }
 
-func (u subMenuUseCase) GetSubMenuList(r GetSubMenuListRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) GetList(r GetSubMenuListRequest) ([]entity.SubMenu, error) {
 	submenus, err := u.subMenuRepository.GetList(r.MenuIDList)
 	return submenus, err
 }
-func (u subMenuUseCase) BulkCreateSubMenu(bc BulkCreateSubMenuRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	for _, v := range bc.CreateRequests {
 		submenu := entity.SubMenu{
@@ -68,7 +68,7 @@ func (u subMenuUseCase) BulkCreateSubMenu(bc BulkCreateSubMenuRequest) ([]entity
 	submenus, err := u.subMenuRepository.BulkCreate(submenus)
 	return submenus, err
 }
-func (u subMenuUseCase) BulkUpdateSubMenu(r BulkUpdateSubMenuRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) BulkUpdate(r BulkUpdateSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	for _, v := range r.UpdateRequests {
 		submenu := entity.SubMenu{

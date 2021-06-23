@@ -6,10 +6,10 @@ import (
 )
 
 type FoodStuffUseCase interface {
-	GetFoodStuff(GetFoodStuffRequest) (entity.FoodStuff, error)
-	GetFoodStuffList(GetFoodStuffListRequest) ([]entity.FoodStuff, error)
-	BulkCreateFoodStuff(BulkCreateFoodStuffRequest) ([]entity.FoodStuff, error)
-	BulkUpdateFoodStuff(BulkUpdateFoodStuffRequest) ([]entity.FoodStuff, error)
+	Get(GetFoodStuffRequest) (entity.FoodStuff, error)
+	GetList(GetFoodStuffListRequest) ([]entity.FoodStuff, error)
+	BulkCreate(BulkCreateFoodStuffRequest) ([]entity.FoodStuff, error)
+	BulkUpdate(BulkUpdateFoodStuffRequest) ([]entity.FoodStuff, error)
 	ChangeBuyStatus(ChangeFoodStuffStatusRequest) error
 }
 type foodStuffUseCase struct {
@@ -46,18 +46,18 @@ type ChangeFoodStuffStatusRequest struct {
 	Status int
 }
 
-func (u foodStuffUseCase) GetFoodStuff(r GetFoodStuffRequest) (entity.FoodStuff, error) {
+func (u foodStuffUseCase) Get(r GetFoodStuffRequest) (entity.FoodStuff, error) {
 	var foodstuff entity.FoodStuff
 	var err error
 	foodstuff, err = u.foodStuffRepository.GetByMenuID(r.MenuID)
 	return foodstuff, err
 }
 
-func (u foodStuffUseCase) GetFoodStuffList(r GetFoodStuffListRequest) ([]entity.FoodStuff, error) {
+func (u foodStuffUseCase) GetList(r GetFoodStuffListRequest) ([]entity.FoodStuff, error) {
 	foodstuffs, err := u.foodStuffRepository.GetList(r.MenuIDList)
 	return foodstuffs, err
 }
-func (u foodStuffUseCase) BulkCreateFoodStuff(r BulkCreateFoodStuffRequest) ([]entity.FoodStuff, error) {
+func (u foodStuffUseCase) BulkCreate(r BulkCreateFoodStuffRequest) ([]entity.FoodStuff, error) {
 	var foodstuffs []entity.FoodStuff
 	for _, v := range r.CreateRequests {
 		foodstuff := entity.FoodStuff{
@@ -69,7 +69,7 @@ func (u foodStuffUseCase) BulkCreateFoodStuff(r BulkCreateFoodStuffRequest) ([]e
 	foodstuffs, err := u.foodStuffRepository.BulkCreate(foodstuffs)
 	return foodstuffs, err
 }
-func (u foodStuffUseCase) BulkUpdateFoodStuff(r BulkUpdateFoodStuffRequest) ([]entity.FoodStuff, error) {
+func (u foodStuffUseCase) BulkUpdate(r BulkUpdateFoodStuffRequest) ([]entity.FoodStuff, error) {
 	var foodstuffs []entity.FoodStuff
 	for _, v := range r.UpdateRequests {
 		foodstuff := entity.FoodStuff{

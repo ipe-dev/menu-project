@@ -24,7 +24,7 @@ func TestCreateFoodStuff(t *testing.T) {
 	bulkRequest := BulkCreateFoodStuffRequest{requests}
 	p := persistence.NewFoodStuffPersistence()
 	foodStuffUseCase := NewFoodStuffUseCase(p)
-	m, e := foodStuffUseCase.BulkCreateFoodStuff(bulkRequest)
+	m, e := foodStuffUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -47,7 +47,7 @@ func TestUpdateFoodStuff(t *testing.T) {
 	bulkRequest := BulkUpdateFoodStuffRequest{requests}
 	p := persistence.NewFoodStuffPersistence()
 	menuUseCase := NewFoodStuffUseCase(p)
-	m, e := menuUseCase.BulkUpdateFoodStuff(bulkRequest)
+	m, e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -61,7 +61,7 @@ func TestGetFoodStuff(t *testing.T) {
 	}
 	p := persistence.NewFoodStuffPersistence()
 	menuUseCase := NewFoodStuffUseCase(p)
-	m, e := menuUseCase.GetFoodStuff(r)
+	m, e := menuUseCase.Get(r)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
@@ -76,7 +76,7 @@ func TestGetFoodStuffList(t *testing.T) {
 	}
 	p := persistence.NewFoodStuffPersistence()
 	menuUseCase := NewFoodStuffUseCase(p)
-	m, e := menuUseCase.GetFoodStuffList(r)
+	m, e := menuUseCase.GetList(r)
 	t.Log(m)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
