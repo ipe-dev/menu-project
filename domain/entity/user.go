@@ -45,7 +45,6 @@ func PasswordOption(Password string) UserOption {
 	}
 }
 func NewUser(opts ...UserOption) *User {
-
 	user := new(User)
 	for _, opt := range opts {
 		opt(user)

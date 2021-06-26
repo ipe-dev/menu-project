@@ -17,7 +17,7 @@ func NewUserPersistence() repository.UserRepository {
 
 func (p userPersistence) Create(User entity.User) error {
 	tx := database.Db.Begin()
-	err := tx.Create(User).Error
+	err := tx.Table("users").Create(&User).Error
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -27,7 +27,7 @@ func (p userPersistence) Create(User entity.User) error {
 }
 func (p userPersistence) Update(User entity.User) error {
 	tx := database.Db.Begin()
-	err := tx.Updates(User).Error
+	err := tx.Where("id = ?", User.ID).Updates(&User).Error
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -55,12 +55,12 @@ func (p userPersistence) GetByLoginID(LoginID string) (*entity.User, error) {
 }
 func (p userPersistence) GetByLoginIDAndPassword(LoginID string, Password value.Password) (*entity.User, error) {
 	Db := database.Db
-	var user entity.User
-	err := Db.Model(user).Where("login_id = ?", LoginID).Where("password = ?", Password).Find(&user).Error
+	user := new(entity.User)
+	err := Db.Model(user).Where("login_id = ?", LoginID).Where("password = ?", Password).Find(user).Error
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
-	return &user, err
+	return user, err
 }

@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/ipe-dev/menu_project/domain/entity"
-	"github.com/ipe-dev/menu_project/domain/entity/value"
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/domain/service"
 )
@@ -54,7 +53,7 @@ func (u userUseCase) Get(r GetUserRequest) (*entity.User, error) {
 func (u userUseCase) Create(r CreateUserRequest) error {
 
 	// ログインID使用済みチェック
-	exists, err := u.userService.CheckUserExists(r.LoginID)
+	exists, err := u.userService.CheckUserExists(0, r.LoginID)
 	if err != nil {
 		return err
 	}
@@ -72,7 +71,7 @@ func (u userUseCase) Create(r CreateUserRequest) error {
 }
 func (u userUseCase) Update(r UpdateUserRequest) error {
 	// ログインID使用済みチェック
-	exists, err := u.userService.CheckUserExists(r.LoginID)
+	exists, err := u.userService.CheckUserExists(r.ID, r.LoginID)
 	if err != nil {
 		return err
 	}
@@ -91,13 +90,12 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 	return err
 }
 func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, bool) {
-	Password := value.NewPassword(r.Password)
-	GetUser, err := u.userService.LoginAuthentication(r.LoginID, Password)
+	GetUser, err := u.userService.LoginAuthentication(r.LoginID, r.Password)
 	if err != nil {
 		log.Println(err)
 		return nil, false
 	}
-	if GetUser == nil {
+	if GetUser.ID == 0 {
 		return nil, false
 	}
 	return GetUser, true
