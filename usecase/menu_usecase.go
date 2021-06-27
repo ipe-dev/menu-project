@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"log"
-	"time"
 
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
@@ -24,29 +23,29 @@ func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
 
 type CreateMenuRequest struct {
 	Name   string `json:"name"`
-	Date   int64  `json:"date"`
-	Kind   int    `json:"kind"`
+	Date   int64  `json:"date" validate:"required"`
+	Kind   int    `json:"kind" validate:"required"`
 	URL    string `json:"url"`
-	UserID int    `json:"user_id"`
-	WeekID int    `json:"week_id"`
+	UserID int    `json:"user_id" validate:"required"`
+	WeekID int    `json:"week_id" validate:"required"`
 }
 type UpdateMenuRequest struct {
-	ID     int    `json:"id"`
+	ID     int    `json:"id" validate:"required"`
 	Name   string `json:"name"`
-	Date   int64  `json:"date"`
-	Kind   int    `json:"kind"`
+	Date   int64  `json:"date" validate:"required"`
+	Kind   int    `json:"kind" validate:"required"`
 	URL    string `json:"url"`
-	UserID int    `json:"user_id"`
-	WeekID int    `json:"week_id"`
+	UserID int    `json:"user_id" validate:"required"`
+	WeekID int    `json:"week_id" validate:"required"`
 }
 type GetMenuListRequest struct {
-	WeekID int `json:"week_id"`
-	UserID int `json:"user_id"`
+	WeekID int `json:"week_id" validate:"required"`
+	UserID int `json:"user_id" validate:"required"`
 }
 type GetMenuRequest struct {
-	ID     int   `json:"id"`
-	Date   int64 `json:"date"`
-	UserID int   `json:"user_id"`
+	ID     int   `json:"id" validate:"required"`
+	Date   int64 `json:"date" validate:"required"`
+	UserID int   `json:"user_id" validate:"required"`
 }
 type BulkCreateMenuRequest struct {
 	CreateRequests []CreateMenuRequest
@@ -67,15 +66,15 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 
 	var menus []entity.Menu
 	for _, mr := range r.CreateRequests {
-		menu := entity.Menu{
-			Name:   mr.Name,
-			Date:   time.Unix(mr.Date, 0).Format("2006/01/02"),
-			Kind:   mr.Kind,
-			URL:    mr.URL,
-			UserID: mr.UserID,
-			WeekID: mr.WeekID,
-		}
-		menus = append(menus, menu)
+		menu := entity.NewMenu(
+			entity.MenuNameOption(mr.Name),
+			entity.MenuDateOption(mr.Date),
+			entity.MenuKindOption(mr.Kind),
+			entity.MenuUrlOption(mr.URL),
+			entity.MenuUserIDOption(mr.UserID),
+			entity.MenuWeekIDOption(mr.WeekID),
+		)
+		menus = append(menus, *menu)
 	}
 	menus, err := u.menuRepository.BulkCreate(menus)
 	if err != nil {
@@ -86,15 +85,16 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) ([]entity.Menu, error) {
 	var menus []entity.Menu
 	for _, mr := range r.UpdateRequests {
-		menu := entity.Menu{
-			ID:     mr.ID,
-			Name:   mr.Name,
-			Kind:   mr.Kind,
-			URL:    mr.URL,
-			UserID: mr.UserID,
-			WeekID: mr.WeekID,
-		}
-		menus = append(menus, menu)
+		menu := entity.NewMenu(
+			entity.MenuIDOption(mr.ID),
+			entity.MenuNameOption(mr.Name),
+			entity.MenuDateOption(mr.Date),
+			entity.MenuKindOption(mr.Kind),
+			entity.MenuUrlOption(mr.URL),
+			entity.MenuUserIDOption(mr.UserID),
+			entity.MenuWeekIDOption(mr.WeekID),
+		)
+		menus = append(menus, *menu)
 	}
 	menus, err := u.menuRepository.BulkUpdate(menus)
 	if err != nil {

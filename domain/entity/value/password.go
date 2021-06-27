@@ -9,7 +9,7 @@ import (
 type Password string
 
 func NewPassword(s string) Password {
-	hash, err := bcrypt.GenerateFromPassword([]byte(s), 12)
+	hash, err := bcrypt.GenerateFromPassword([]byte(s), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println(err)
 		return ""

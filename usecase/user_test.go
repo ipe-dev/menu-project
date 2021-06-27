@@ -12,9 +12,9 @@ import (
 func TestCreateUser(t *testing.T) {
 	database.Connect()
 	r := CreateUserRequest{
-		Name:     "あああああ",
-		LoginID:  "test_id0000000000000003",
-		Password: "test_password3",
+		Name:     "田中太郎",
+		LoginID:  "new_login",
+		Password: "taro_password",
 	}
 	p := persistence.NewUserPersistence()
 	s := service.NewUserService(p)

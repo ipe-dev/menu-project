@@ -21,29 +21,29 @@ func NewSubFoodStuffUseCase(r repository.SubFoodStuffRepository) SubFoodStuffUse
 }
 
 type GetSubFoodStuffRequest struct {
-	SubMenuID int `json:"menu_id"`
+	SubMenuID int `json:"menu_id" validate:"required"`
 }
 type GetSubFoodStuffListRequest struct {
 	SubMenuIDList []int `json:"menu_id_list"`
 }
 type CreateSubFoodStuffRequest struct {
-	Name      string `json:"name"`
-	SubMenuID int    `json:"menu_id"`
+	Name      string `json:"name" validate:"required"`
+	SubMenuID int    `json:"menu_id" validate:"required"`
 }
 type BulkCreateSubFoodStuffRequest struct {
 	CreateRequests []CreateSubFoodStuffRequest
 }
 type UpdateSubFoodStuffRequest struct {
-	ID        int    `json:"id"`
-	Name      string `json:"name"`
-	SubMenuID int    `json:"menu_id"`
+	ID        int    `json:"id" validate:"required"`
+	Name      string `json:"name" validate:"required"`
+	SubMenuID int    `json:"menu_id" validate:"required"`
 }
 type BulkUpdateSubFoodStuffRequest struct {
 	UpdateRequests []UpdateSubFoodStuffRequest
 }
 type ChangeSubBuyStatusRequest struct {
-	ID     int `json:"id"`
-	Status int `json:"status"`
+	ID     int `json:"id" validate:"required"`
+	Status int `json:"status" validate:"required"`
 }
 
 func (u subFoodStuffUseCase) Get(r GetSubFoodStuffRequest) (entity.SubFoodStuff, error) {
@@ -60,11 +60,11 @@ func (u subFoodStuffUseCase) GetList(r GetSubFoodStuffListRequest) ([]entity.Sub
 func (u subFoodStuffUseCase) BulkCreate(r BulkCreateSubFoodStuffRequest) ([]entity.SubFoodStuff, error) {
 	var foodstuffs []entity.SubFoodStuff
 	for _, v := range r.CreateRequests {
-		foodstuff := entity.SubFoodStuff{
-			Name:      v.Name,
-			SubMenuID: v.SubMenuID,
-		}
-		foodstuffs = append(foodstuffs, foodstuff)
+		foodstuff := entity.NewSubFoodStuff(
+			entity.SubFoodStuffNameOption(v.Name),
+			entity.SubFoodStuffMenuIDOption(v.SubMenuID),
+		)
+		foodstuffs = append(foodstuffs, *foodstuff)
 	}
 	foodstuffs, err := u.subFoodStuffRepository.BulkCreate(foodstuffs)
 	return foodstuffs, err
@@ -72,12 +72,12 @@ func (u subFoodStuffUseCase) BulkCreate(r BulkCreateSubFoodStuffRequest) ([]enti
 func (u subFoodStuffUseCase) BulkUpdate(r BulkUpdateSubFoodStuffRequest) ([]entity.SubFoodStuff, error) {
 	var foodstuffs []entity.SubFoodStuff
 	for _, v := range r.UpdateRequests {
-		foodstuff := entity.SubFoodStuff{
-			ID:        v.ID,
-			Name:      v.Name,
-			SubMenuID: v.SubMenuID,
-		}
-		foodstuffs = append(foodstuffs, foodstuff)
+		foodstuff := entity.NewSubFoodStuff(
+			entity.SubFoodStuffIDOption(v.ID),
+			entity.SubFoodStuffNameOption(v.Name),
+			entity.SubFoodStuffMenuIDOption(v.SubMenuID),
+		)
+		foodstuffs = append(foodstuffs, *foodstuff)
 	}
 	foodstuffs, err := u.subFoodStuffRepository.BulkUpdate(foodstuffs)
 	return foodstuffs, err
