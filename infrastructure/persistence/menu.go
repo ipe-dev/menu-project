@@ -14,18 +14,27 @@ func NewMenuPersistence() repository.MenuRepository {
 	return &menuPersistence{}
 }
 func (p menuPersistence) BulkCreate(menus []entity.Menu) ([]entity.Menu, error) {
-	Db := database.Db
-	err := Db.Model(&menus).Create(menus).Error
+	tx := database.Db.Begin()
+	err := tx.Model(&menus).Create(menus).Error
+	if err != nil {
+		tx.Rollback()
+		return menus, err
+	}
 	return menus, err
 }
 func (p menuPersistence) BulkUpdate(menus []entity.Menu) ([]entity.Menu, error) {
-	Db := database.Db
+	tx := database.Db.Begin()
 	var res []entity.Menu
 	var err error
 	for _, menu := range menus {
-		err = Db.Model(&menu).Updates(menu).Error
+		err = tx.Model(&menu).Updates(menu).Error
+		if err != nil {
+			tx.Rollback()
+			return res, err
+		}
 		res = append(res, menu)
 	}
+	tx.Commit()
 	return res, err
 }
 func (p menuPersistence) GetByID(id int) (entity.Menu, error) {
