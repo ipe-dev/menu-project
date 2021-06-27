@@ -20,24 +20,24 @@ func NewSubMenuUseCase(r repository.SubMenuRepository) SubMenuUseCase {
 }
 
 type GetSubMenuRequest struct {
-	ID     int `json:"id"`
-	MenuID int `json:"menu_id"`
+	ID     int `json:"id"　validate:"required"`
+	MenuID int `json:"menu_id"　validate:"required"`
 }
 type GetSubMenuListRequest struct {
 	MenuIDList []int `json:"menu_id_list"`
 }
 type CreateSubMenuRequest struct {
-	ID     int    `json:"id"`
-	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"`
+	ID     int    `json:"id"　validate:"required"`
+	Name   string `json:"name"　validate:"required"`
+	MenuID int    `json:"menu_id"　validate:"required"`
 }
 type BulkCreateSubMenuRequest struct {
 	CreateRequests []CreateSubMenuRequest
 }
 type UpdateSubMenuRequest struct {
-	ID     int    `json:"id"`
+	ID     int    `json:"id"　validate:"required"`
 	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"`
+	MenuID int    `json:"menu_id"　validate:"required"`
 }
 type BulkUpdateSubMenuRequest struct {
 	UpdateRequests []UpdateSubMenuRequest
