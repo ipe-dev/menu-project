@@ -20,24 +20,24 @@ func NewSubMenuUseCase(r repository.SubMenuRepository) SubMenuUseCase {
 }
 
 type GetSubMenuRequest struct {
-	ID     int `json:"id"`
-	MenuID int `json:"menu_id"`
+	ID     int `json:"id"　validate:"required"`
+	MenuID int `json:"menu_id"　validate:"required"`
 }
 type GetSubMenuListRequest struct {
 	MenuIDList []int `json:"menu_id_list"`
 }
 type CreateSubMenuRequest struct {
-	ID     int    `json:"id"`
-	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"`
+	ID     int    `json:"id"　validate:"required"`
+	Name   string `json:"name"　validate:"required"`
+	MenuID int    `json:"menu_id"　validate:"required"`
 }
 type BulkCreateSubMenuRequest struct {
 	CreateRequests []CreateSubMenuRequest
 }
 type UpdateSubMenuRequest struct {
-	ID     int    `json:"id"`
+	ID     int    `json:"id"　validate:"required"`
 	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"`
+	MenuID int    `json:"menu_id"　validate:"required"`
 }
 type BulkUpdateSubMenuRequest struct {
 	UpdateRequests []UpdateSubMenuRequest
@@ -59,11 +59,11 @@ func (u subMenuUseCase) GetList(r GetSubMenuListRequest) ([]entity.SubMenu, erro
 func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	for _, v := range bc.CreateRequests {
-		submenu := entity.SubMenu{
-			Name:   v.Name,
-			MenuID: v.MenuID,
-		}
-		submenus = append(submenus, submenu)
+		submenu := entity.NewSubMenu(
+			entity.SubMenuNameOption(v.Name),
+			entity.SubMenuMenuIDOption(v.MenuID),
+		)
+		submenus = append(submenus, *submenu)
 	}
 	submenus, err := u.subMenuRepository.BulkCreate(submenus)
 	return submenus, err
@@ -71,12 +71,13 @@ func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMen
 func (u subMenuUseCase) BulkUpdate(r BulkUpdateSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	for _, v := range r.UpdateRequests {
-		submenu := entity.SubMenu{
-			ID:     v.ID,
-			Name:   v.Name,
-			MenuID: v.MenuID,
-		}
-		submenus = append(submenus, submenu)
+		submenu := entity.NewSubMenu(
+			entity.SubMenuIDOption(v.ID),
+			entity.SubMenuNameOption(v.Name),
+			entity.SubMenuMenuIDOption(v.MenuID),
+		)
+
+		submenus = append(submenus, *submenu)
 	}
 	submenus, err := u.subMenuRepository.BulkUpdate(submenus)
 	return submenus, err

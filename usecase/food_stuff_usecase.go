@@ -21,22 +21,22 @@ func NewFoodStuffUseCase(r repository.FoodStuffRepository) FoodStuffUseCase {
 }
 
 type GetFoodStuffRequest struct {
-	MenuID int `json:"menu_id"`
+	MenuID int `json:"menu_id" validate:"required"`
 }
 type GetFoodStuffListRequest struct {
 	MenuIDList []int `json:"menu_id_list"`
 }
 type CreateFoodStuffRequest struct {
-	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"`
+	Name   string `json:"name" validate:"required"`
+	MenuID int    `json:"menu_id" validate:"required"`
 }
 type BulkCreateFoodStuffRequest struct {
 	CreateRequests []CreateFoodStuffRequest
 }
 type UpdateFoodStuffRequest struct {
-	ID     int    `json:"id"`
+	ID     int    `json:"id" validate:"required"`
 	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"`
+	MenuID int    `json:"menu_id" validate:"required"`
 }
 type BulkUpdateFoodStuffRequest struct {
 	UpdateRequests []UpdateFoodStuffRequest
@@ -60,11 +60,11 @@ func (u foodStuffUseCase) GetList(r GetFoodStuffListRequest) ([]entity.FoodStuff
 func (u foodStuffUseCase) BulkCreate(r BulkCreateFoodStuffRequest) ([]entity.FoodStuff, error) {
 	var foodstuffs []entity.FoodStuff
 	for _, v := range r.CreateRequests {
-		foodstuff := entity.FoodStuff{
-			Name:   v.Name,
-			MenuID: v.MenuID,
-		}
-		foodstuffs = append(foodstuffs, foodstuff)
+		foodstuff := entity.NewFoodStuff(
+			entity.FoodStuffMenuNameOption(v.Name),
+			entity.FoodStuffMenuIDOption(v.MenuID),
+		)
+		foodstuffs = append(foodstuffs, *foodstuff)
 	}
 	foodstuffs, err := u.foodStuffRepository.BulkCreate(foodstuffs)
 	return foodstuffs, err
@@ -72,12 +72,12 @@ func (u foodStuffUseCase) BulkCreate(r BulkCreateFoodStuffRequest) ([]entity.Foo
 func (u foodStuffUseCase) BulkUpdate(r BulkUpdateFoodStuffRequest) ([]entity.FoodStuff, error) {
 	var foodstuffs []entity.FoodStuff
 	for _, v := range r.UpdateRequests {
-		foodstuff := entity.FoodStuff{
-			ID:     v.ID,
-			Name:   v.Name,
-			MenuID: v.MenuID,
-		}
-		foodstuffs = append(foodstuffs, foodstuff)
+		foodstuff := entity.NewFoodStuff(
+			entity.FoodStuffIDOption(v.ID),
+			entity.FoodStuffMenuNameOption(v.Name),
+			entity.FoodStuffMenuIDOption(v.MenuID),
+		)
+		foodstuffs = append(foodstuffs, *foodstuff)
 	}
 	foodstuffs, err := u.foodStuffRepository.BulkUpdate(foodstuffs)
 	return foodstuffs, err
