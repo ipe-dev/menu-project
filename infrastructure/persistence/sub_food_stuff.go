@@ -24,8 +24,7 @@ func (p subFoodStuffPersistence) GetList(MenuIDList []int) ([]entity.SubFoodStuf
 	return SubFoodStuffs, err
 }
 func (p subFoodStuffPersistence) BulkCreate(SubFoodStuffs []entity.SubFoodStuff) ([]entity.SubFoodStuff, error) {
-	Db := database.Db
-	tx := Db.Begin()
+	tx := database.Db.Begin()
 	err := tx.Model(&SubFoodStuffs).Create(SubFoodStuffs).Error
 	if err != nil {
 		tx.Rollback()
@@ -35,8 +34,7 @@ func (p subFoodStuffPersistence) BulkCreate(SubFoodStuffs []entity.SubFoodStuff)
 	return SubFoodStuffs, err
 }
 func (p subFoodStuffPersistence) BulkUpdate(SubFoodStuffs []entity.SubFoodStuff) ([]entity.SubFoodStuff, error) {
-	Db := database.Db
-	tx := Db.Begin()
+	tx := database.Db.Begin()
 	var res []entity.SubFoodStuff
 	var err error
 	for _, s := range SubFoodStuffs {
@@ -51,8 +49,7 @@ func (p subFoodStuffPersistence) BulkUpdate(SubFoodStuffs []entity.SubFoodStuff)
 	return res, err
 }
 func (p subFoodStuffPersistence) ChangeBuyStatus(ID int, Status int) error {
-	Db := database.Db
-	tx := Db.Begin()
+	tx := database.Db.Begin()
 	err := tx.Table("sub_food_stuffs").Where("id = ?", ID).Update("buy_status", Status).Error
 	if err != nil {
 		tx.Rollback()
