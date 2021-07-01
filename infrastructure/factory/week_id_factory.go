@@ -11,7 +11,7 @@ type WeekIDFactory interface {
 
 type weekIDFactory struct{}
 
-func NewMenuFactory() WeekIDFactory {
+func NewWeekIDFactory() WeekIDFactory {
 	return weekIDFactory{}
 }
 
