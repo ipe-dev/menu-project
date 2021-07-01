@@ -7,34 +7,35 @@ import (
 
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/infrastructure/database"
+	"github.com/ipe-dev/menu_project/infrastructure/factory"
 	persistence "github.com/ipe-dev/menu_project/infrastructure/persistence"
 )
 
 func TestCreateMenu(t *testing.T) {
 	database.Connect()
-	date := time.Now().AddDate(0, 0, 1).Unix()
+	// date := time.Now().AddDate(0, 0, 1).Unix()
+	date := time.Now().Unix()
 	r := CreateMenuRequest{
 		Name:   "ハンバーグ",
 		Date:   date,
 		Kind:   entity.MenuKindLunch,
 		URL:    "https://www.google.com/",
-		UserID: 1,
-		WeekID: 1,
+		UserID: 8,
 	}
 	r2 := CreateMenuRequest{
 		Name:   "寿司",
 		Date:   date,
 		Kind:   entity.MenuKindDinner,
 		URL:    "https://www.google.com/",
-		UserID: 1,
-		WeekID: 1,
+		UserID: 8,
 	}
 	var requests []CreateMenuRequest
 	requests = append(requests, r)
 	requests = append(requests, r2)
 	bulkRequest := BulkCreateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
-	menuUseCase := NewMenuUseCase(p)
+	f := factory.NewMenuFactory()
+	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
@@ -50,13 +51,13 @@ func TestUpdateMenu(t *testing.T) {
 		Kind:   entity.MenuKindLunch,
 		URL:    "https://www.google.com/",
 		UserID: 1,
-		WeekID: 1,
 	}
 	var requests []UpdateMenuRequest
 	requests = append(requests, r)
 	bulkRequest := BulkUpdateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
-	menuUseCase := NewMenuUseCase(p)
+	f := factory.NewMenuFactory()
+	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
@@ -72,7 +73,8 @@ func TestGetMenu(t *testing.T) {
 		UserID: 1,
 	}
 	p := persistence.NewMenuPersistence()
-	menuUseCase := NewMenuUseCase(p)
+	f := factory.NewMenuFactory()
+	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.Get(r)
 	fmt.Println(m)
 	if e != nil {
@@ -88,7 +90,8 @@ func TestGetMenuList(t *testing.T) {
 		UserID: 1,
 	}
 	p := persistence.NewMenuPersistence()
-	menuUseCase := NewMenuUseCase(p)
+	f := factory.NewMenuFactory()
+	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.GetList(r)
 	t.Log(m)
 	if e != nil {

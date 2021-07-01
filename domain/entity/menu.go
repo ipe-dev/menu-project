@@ -10,7 +10,7 @@ type Menu struct {
 	ID        int
 	WeekID    int
 	Name      string
-	Date      value.Date
+	Date      string
 	Kind      int
 	URL       string
 	UserID    int
