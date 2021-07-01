@@ -22,6 +22,17 @@ func (p userPersistence) Create(User entity.User) error {
 		tx.Rollback()
 		return err
 	}
+	var WeekID struct {
+		UserID int
+		WeekID int
+	}
+	WeekID.UserID = User.ID
+	WeekID.WeekID = 1
+	err = tx.Table("week_ids").Create(&WeekID).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
 	tx.Commit()
 	return err
 }
@@ -56,11 +67,10 @@ func (p userPersistence) GetByLoginID(LoginID string) (*entity.User, error) {
 func (p userPersistence) GetByLoginIDAndPassword(LoginID string, Password value.Password) (*entity.User, error) {
 	Db := database.Db
 	user := new(entity.User)
-	err := Db.Model(user).Where("login_id = ?", LoginID).Where("password = ?", Password).Find(user).Error
+	err := Db.Model(*user).Where("login_id = ?", LoginID).Where("password = ?", Password).Find(user).Error
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-
 	return user, err
 }

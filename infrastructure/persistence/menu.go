@@ -20,6 +20,7 @@ func (p menuPersistence) BulkCreate(menus []entity.Menu) ([]entity.Menu, error) 
 		tx.Rollback()
 		return menus, err
 	}
+	tx.Commit()
 	return menus, err
 }
 func (p menuPersistence) BulkUpdate(menus []entity.Menu) ([]entity.Menu, error) {

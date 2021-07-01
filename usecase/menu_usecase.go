@@ -5,6 +5,7 @@ import (
 
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
+	"github.com/ipe-dev/menu_project/infrastructure/factory"
 )
 
 type MenuUseCase interface {
@@ -15,10 +16,14 @@ type MenuUseCase interface {
 }
 type menuUseCase struct {
 	menuRepository repository.MenuRepository
+	weekIDFactory  factory.WeekIDFactory
 }
 
-func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
-	return menuUseCase{menuRepository: r}
+func NewMenuUseCase(r repository.MenuRepository, f factory.WeekIDFactory) MenuUseCase {
+	return menuUseCase{
+		menuRepository: r,
+		weekIDFactory:  f,
+	}
 }
 
 type CreateMenuRequest struct {
@@ -36,7 +41,6 @@ type UpdateMenuRequest struct {
 	Kind   int    `json:"kind" validate:"required"`
 	URL    string `json:"url"`
 	UserID int    `json:"user_id" validate:"required"`
-	WeekID int    `json:"week_id" validate:"required"`
 }
 type GetMenuListRequest struct {
 	WeekID int `json:"week_id" validate:"required"`
@@ -65,6 +69,12 @@ func (u menuUseCase) GetList(r GetMenuListRequest) ([]entity.Menu, error) {
 func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) {
 
 	var menus []entity.Menu
+	WeekID, err := u.weekIDFactory.NewWeekID(r.CreateRequests[0].UserID)
+	if err != nil {
+		// TODO:カスタムエラー作る
+		log.Println(err)
+		return menus, err
+	}
 	for _, mr := range r.CreateRequests {
 		menu := entity.NewMenu(
 			entity.MenuNameOption(mr.Name),
@@ -72,14 +82,23 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 			entity.MenuKindOption(mr.Kind),
 			entity.MenuUrlOption(mr.URL),
 			entity.MenuUserIDOption(mr.UserID),
-			entity.MenuWeekIDOption(mr.WeekID),
+			entity.MenuWeekIDOption(WeekID),
 		)
 		menus = append(menus, *menu)
 	}
-	menus, err := u.menuRepository.BulkCreate(menus)
+	menus, err = u.menuRepository.BulkCreate(menus)
 	if err != nil {
+		// TODO:カスタムエラー作る
 		log.Println(err)
+		return menus, err
 	}
+	err = u.weekIDFactory.IncrementWeekID(r.CreateRequests[0].UserID)
+	if err != nil {
+		// TODO:カスタムエラー作る
+		log.Println(err)
+		return menus, err
+	}
+
 	return menus, err
 }
 func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) ([]entity.Menu, error) {
@@ -92,7 +111,6 @@ func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) ([]entity.Menu, error) 
 			entity.MenuKindOption(mr.Kind),
 			entity.MenuUrlOption(mr.URL),
 			entity.MenuUserIDOption(mr.UserID),
-			entity.MenuWeekIDOption(mr.WeekID),
 		)
 		menus = append(menus, *menu)
 	}
