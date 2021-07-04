@@ -1,4 +1,4 @@
-package error
+package errors
 
 import (
 	"fmt"
@@ -28,10 +28,19 @@ type ExistError struct {
 	Value interface{}
 }
 
-func NewInfraError(e error, msg string, values ...interface{}) *InfraError {
+func NewInfraError(e error, values ...interface{}) *InfraError {
+	if e == nil {
+		return nil
+	}
+	pc, file, line, _ := runtime.Caller(1)
+	function := runtime.FuncForPC(pc)
+	msg := fmt.Sprintf("call:%s file:%s:%d", function, file, line)
 	return &InfraError{e, msg, values}
 }
 func NewValidateError(e error, values ...interface{}) *ValidateError {
+	if e == nil {
+		return nil
+	}
 	pc, file, line, _ := runtime.Caller(1)
 	function := runtime.FuncForPC(pc)
 	msg := fmt.Sprintf("call:%s file:%s:%d", function, file, line)

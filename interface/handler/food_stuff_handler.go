@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ipe-dev/menu_project/error"
+	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -28,7 +28,7 @@ func (h foodStuffHandler) HandleGet() gin.HandlerFunc {
 		var r usecase.GetFoodStuffRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -47,7 +47,7 @@ func (h foodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 		var r usecase.BulkCreateFoodStuffRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -64,7 +64,7 @@ func (h foodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 		var r usecase.BulkUpdateFoodStuffRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -81,7 +81,7 @@ func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 		var r usecase.GetFoodStuffListRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -98,7 +98,7 @@ func (h foodStuffHandler) HandleChangeBuyStatus() gin.HandlerFunc {
 		var r usecase.ChangeFoodStuffStatusRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}

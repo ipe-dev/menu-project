@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ipe-dev/menu_project/error"
+	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -27,7 +27,7 @@ func (h subMenuHandler) HandleGet() gin.HandlerFunc {
 		var r usecase.GetSubMenuRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err)
 			return
 		}
@@ -45,7 +45,7 @@ func (h subMenuHandler) HandleBulkCreate() gin.HandlerFunc {
 		var r usecase.BulkCreateSubMenuRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -62,7 +62,7 @@ func (h subMenuHandler) HandleBulkUpdate() gin.HandlerFunc {
 		var r usecase.BulkUpdateSubMenuRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err)
 		}
 		m, e := h.subMenuUseCase.BulkUpdate(r)
@@ -78,7 +78,7 @@ func (h subMenuHandler) HandleGetList() gin.HandlerFunc {
 		var r usecase.GetSubMenuListRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}

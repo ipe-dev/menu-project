@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ipe-dev/menu_project/error"
+	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -25,7 +25,7 @@ func (h userHandler) Get() gin.HandlerFunc {
 		var r usecase.GetUserRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -42,7 +42,7 @@ func (h userHandler) Create() gin.HandlerFunc {
 		var r usecase.CreateUserRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
@@ -59,7 +59,7 @@ func (h userHandler) Update() gin.HandlerFunc {
 		var r usecase.UpdateUserRequest
 		e := c.BindJSON(&r)
 		if e != nil {
-			err := error.NewValidateError(e, c.Request)
+			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
