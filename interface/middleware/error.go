@@ -24,7 +24,7 @@ func (e errorMiddleware) ErrorHandle() gin.HandlerFunc {
 		if err != nil {
 			log.Println(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-				"error": err.Err,
+				"error": err.Error(),
 			})
 		}
 	}

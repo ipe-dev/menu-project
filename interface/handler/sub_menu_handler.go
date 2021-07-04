@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ipe-dev/menu_project/error"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -24,10 +25,15 @@ func NewSubMenuHandler(su usecase.SubMenuUseCase) SubMenuHandler {
 func (h subMenuHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubMenuRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err)
+			return
+		}
 		m, e := h.subMenuUseCase.Get(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, m)
 		}
@@ -37,10 +43,15 @@ func (h subMenuHandler) HandleGet() gin.HandlerFunc {
 func (h subMenuHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateSubMenuRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
 		m, e := h.subMenuUseCase.BulkCreate(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, m)
 		}
@@ -49,10 +60,14 @@ func (h subMenuHandler) HandleBulkCreate() gin.HandlerFunc {
 func (h subMenuHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateSubMenuRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err)
+		}
 		m, e := h.subMenuUseCase.BulkUpdate(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, m)
 		}
@@ -61,10 +76,15 @@ func (h subMenuHandler) HandleBulkUpdate() gin.HandlerFunc {
 func (h subMenuHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetSubMenuListRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
 		m, e := h.subMenuUseCase.GetList(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, m)
 		}

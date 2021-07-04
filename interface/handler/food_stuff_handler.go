@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ipe-dev/menu_project/error"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -25,23 +26,34 @@ func NewFoodStuffHandler(u usecase.FoodStuffUseCase) FoodStuffHandler {
 func (h foodStuffHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetFoodStuffRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
 		f, e := h.foodStuffUseCase.Get(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, f)
 		}
+
 	}
 }
 
 func (h foodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkCreateFoodStuffRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
 		f, e := h.foodStuffUseCase.BulkCreate(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, f)
 		}
@@ -50,10 +62,15 @@ func (h foodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 func (h foodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.BulkUpdateFoodStuffRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
 		f, e := h.foodStuffUseCase.BulkUpdate(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, f)
 		}
@@ -62,10 +79,15 @@ func (h foodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetFoodStuffListRequest
-		c.BindJSON(&r)
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
 		f, e := h.foodStuffUseCase.GetList(r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, f)
 		}
@@ -74,10 +96,15 @@ func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 func (h foodStuffHandler) HandleChangeBuyStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.ChangeFoodStuffStatusRequest
-		c.BindJSON(&r)
-		e := h.foodStuffUseCase.ChangeBuyStatus(r)
+		e := c.BindJSON(&r)
 		if e != nil {
-			c.JSON(http.StatusBadRequest, gin.H{})
+			err := error.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
+		e = h.foodStuffUseCase.ChangeBuyStatus(r)
+		if e != nil {
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
 			c.JSON(http.StatusOK, gin.H{})
 		}
