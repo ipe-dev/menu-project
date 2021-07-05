@@ -2,10 +2,10 @@ package service
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
+	"github.com/ipe-dev/menu_project/errors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,15 +24,14 @@ func NewUserService(r repository.UserRepository) UserService {
 func (s userService) CheckUserExists(ID int, LoginID string) (bool, error) {
 	user, err := s.UserRepository.GetByLoginID(LoginID)
 	if err != nil {
-		log.Println(err)
-		return false, err
+		return false, errors.NewInfraError(err, LoginID)
 	}
 	if ID == 0 {
 		// Create
-		return user.ID != 0, err
+		return user.ID != 0, nil
 	} else {
 		// Update
-		return user.ID != 0 && user.ID != ID, err
+		return user.ID != 0 && user.ID != ID, nil
 	}
 }
 func (s userService) LoginAuthentication(LoginID string, Password string) (*entity.User, error) {

@@ -23,7 +23,7 @@ type LoginError struct {
 	Value interface{}
 }
 type ExistError struct {
-	Err   error
+	Text  string
 	Msg   string
 	Value interface{}
 }
@@ -47,8 +47,11 @@ func NewValidateError(e error, values ...interface{}) *ValidateError {
 
 	return &ValidateError{e, msg, values}
 }
-func NewExistError(e error, msg string, values ...interface{}) *ExistError {
-	return &ExistError{e, msg, values}
+func NewExistError(text string, values ...interface{}) *ExistError {
+	pc, file, line, _ := runtime.Caller(1)
+	function := runtime.FuncForPC(pc)
+	msg := fmt.Sprintf("call:%s file:%s:%d", function, file, line)
+	return &ExistError{text, msg, values}
 }
 func NewLoginError(e error, msg string, values ...interface{}) *LoginError {
 	return &LoginError{e, msg, values}

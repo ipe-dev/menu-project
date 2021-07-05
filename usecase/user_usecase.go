@@ -6,6 +6,7 @@ import (
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/domain/service"
+	"github.com/ipe-dev/menu_project/errors"
 )
 
 type UserUseCase interface {
@@ -58,8 +59,7 @@ func (u userUseCase) Create(r CreateUserRequest) error {
 		return err
 	}
 	if exists {
-		// TODO: カスタムエラー作る
-		return err
+		return errors.NewExistError("ログインIDが存在しています", r)
 	}
 	user := entity.NewUser(
 		entity.UserNameOption(r.Name),
@@ -76,8 +76,7 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 		return err
 	}
 	if exists {
-		// TODO: カスタムエラー作る
-		return err
+		return errors.NewExistError("ログインIDが存在しています", r)
 	}
 	user := entity.NewUser(
 		entity.UserIDOption(r.ID),
