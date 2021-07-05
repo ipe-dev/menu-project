@@ -57,5 +57,5 @@ func (p foodStuffPersistence) ChangeBuyStatus(ID int, Status int) error {
 		return errors.NewInfraError(err, ID, Status)
 	}
 	tx.Commit()
-	return err
+	return nil
 }
