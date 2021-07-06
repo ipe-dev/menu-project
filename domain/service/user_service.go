@@ -40,7 +40,7 @@ func (s userService) LoginAuthentication(LoginID string, Password string) (*enti
 	compareError := bcrypt.CompareHashAndPassword([]byte(hash), []byte(Password))
 	fmt.Println(GetUser.Password)
 	if compareError != nil {
-		return GetUser, compareError
+		return GetUser, errors.NewLoginPasswordError(compareError, hash, Password)
 	}
 	return GetUser, err
 }

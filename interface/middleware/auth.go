@@ -6,6 +6,7 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
+	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -28,12 +29,15 @@ func (m authMiddleware) NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
 		MaxRefresh: time.Hour,
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var r usecase.LoginRequest
-			c.BindJSON(&r)
-			user, ok := m.UserUseCase.LoginAuthenticate(r)
-			if ok {
-				return *user, nil
+			e := c.BindJSON(&r)
+			if e != nil {
+				return nil, errors.NewValidateError(e, c.Request)
 			}
-			return nil, jwt.ErrFailedAuthentication
+			user, err := m.UserUseCase.LoginAuthenticate(r)
+			if err != nil {
+				return nil, err
+			}
+			return *user, nil
 		},
 	})
 	return authMiddleWare, err

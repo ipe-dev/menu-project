@@ -1,6 +1,7 @@
 package factory
 
 import (
+	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/infrastructure/database"
 )
 
@@ -23,7 +24,7 @@ func (w weekIDFactory) NewWeekID(UserID int) (int, error) {
 	err := tx.Table("week_ids").Where("user_id = ?", UserID).Find(&WeekID).Error
 	if err != nil {
 		tx.Rollback()
-		return 0, err
+		return 0, errors.NewInfraError(err, UserID)
 	}
 	if WeekID.WeekID == 0 {
 		tx.Rollback()
@@ -39,16 +40,16 @@ func (w weekIDFactory) IncrementWeekID(UserID int) error {
 	err := tx.Table("week_ids").Where("user_id = ?", UserID).Pluck("week_id", &WeekIDs).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return errors.NewInfraError(err, UserID)
 	}
 	if WeekIDs[0] == 0 {
 		tx.Rollback()
-		return err
+		return errors.NewCustomError("WeekIDの更新に失敗しました", UserID)
 	}
 	err = tx.Table("week_ids").Where("user_id = ?", UserID).Update("week_id", WeekIDs[0]+1).Error
 	if err != nil {
 		tx.Rollback()
-		return err
+		return errors.NewInfraError(err, UserID)
 	}
 	tx.Commit()
 	return nil
