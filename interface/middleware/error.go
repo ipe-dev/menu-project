@@ -22,9 +22,9 @@ func (e errorMiddleware) ErrorHandle() gin.HandlerFunc {
 		c.Next()
 		err := c.Errors.ByType(gin.ErrorTypePublic).Last()
 		if err != nil {
-			log.Println(err)
+			log.Println(err.Error())
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error": "エラーが発生しました",
 			})
 		}
 	}
