@@ -1,18 +1,17 @@
 package usecase
 
 import (
-	"log"
-
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/domain/service"
+	"github.com/ipe-dev/menu_project/errors"
 )
 
 type UserUseCase interface {
 	Get(GetUserRequest) (*entity.User, error)
 	Create(CreateUserRequest) error
 	Update(UpdateUserRequest) error
-	LoginAuthenticate(LoginRequest) (*entity.User, bool)
+	LoginAuthenticate(LoginRequest) (*entity.User, error)
 }
 type userUseCase struct {
 	userRepository repository.UserRepository
@@ -58,8 +57,7 @@ func (u userUseCase) Create(r CreateUserRequest) error {
 		return err
 	}
 	if exists {
-		// TODO: カスタムエラー作る
-		return err
+		return errors.NewExistError("ログインIDが存在しています", r)
 	}
 	user := entity.NewUser(
 		entity.UserNameOption(r.Name),
@@ -76,8 +74,7 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 		return err
 	}
 	if exists {
-		// TODO: カスタムエラー作る
-		return err
+		return errors.NewExistError("ログインIDが存在しています", r)
 	}
 	user := entity.NewUser(
 		entity.UserIDOption(r.ID),
@@ -89,15 +86,14 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 	err = u.userRepository.Update(*user)
 	return err
 }
-func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, bool) {
+func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, error) {
 	GetUser, err := u.userService.LoginAuthentication(r.LoginID, r.Password)
 	if err != nil {
-		log.Println(err)
-		return nil, false
+		return nil, err
 	}
 	if GetUser.ID == 0 {
-		return nil, false
+		return nil, errors.NewLoginNotFoundError("ユーザーが見つかりませんでした", r.LoginID, r.Password)
 	}
-	return GetUser, true
+	return GetUser, nil
 
 }

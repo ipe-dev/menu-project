@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
 )
 
@@ -22,48 +23,51 @@ func NewUserHandler(u usecase.UserUseCase) UserHandler {
 func (h userHandler) Get() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetUserRequest
-		err := c.BindJSON(&r)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error_message": err})
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := errors.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
+		u, e := h.UserUseCase.Get(r)
+		if e != nil {
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			u, e := h.UserUseCase.Get(r)
-			if e != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error_message": e})
-			} else {
-				c.JSON(http.StatusOK, *u)
-			}
+			c.JSON(http.StatusOK, *u)
 		}
 	}
 }
 func (h userHandler) Create() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.CreateUserRequest
-		err := c.BindJSON(&r)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error_message": err})
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := errors.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
+		e = h.UserUseCase.Create(r)
+		if e != nil {
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			e := h.UserUseCase.Create(r)
-			if e != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error_message": e})
-			} else {
-				c.JSON(http.StatusOK, gin.H{})
-			}
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h userHandler) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.UpdateUserRequest
-		err := c.BindJSON(&r)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error_message": err})
+		e := c.BindJSON(&r)
+		if e != nil {
+			err := errors.NewValidateError(e, c.Request)
+			c.Error(err).SetType(gin.ErrorTypePublic)
+			return
+		}
+		e = h.UserUseCase.Update(r)
+		if e != nil {
+			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			e := h.UserUseCase.Update(r)
-			if e != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error_message": e})
-			} else {
-				c.JSON(http.StatusOK, gin.H{})
-			}
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }

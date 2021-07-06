@@ -60,9 +60,6 @@ type BulkUpdateMenuRequest struct {
 
 func (u menuUseCase) GetList(r GetMenuListRequest) ([]entity.Menu, error) {
 	menus, err := u.menuRepository.GetList(r.WeekID, r.UserID)
-	if err != nil {
-		log.Println(err)
-	}
 	return menus, err
 }
 
@@ -71,8 +68,6 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 	var menus []entity.Menu
 	WeekID, err := u.weekIDFactory.NewWeekID(r.CreateRequests[0].UserID)
 	if err != nil {
-		// TODO:カスタムエラー作る
-		log.Println(err)
 		return menus, err
 	}
 	for _, mr := range r.CreateRequests {
@@ -88,14 +83,10 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 	}
 	menus, err = u.menuRepository.BulkCreate(menus)
 	if err != nil {
-		// TODO:カスタムエラー作る
-		log.Println(err)
 		return menus, err
 	}
 	err = u.weekIDFactory.IncrementWeekID(r.CreateRequests[0].UserID)
 	if err != nil {
-		// TODO:カスタムエラー作る
-		log.Println(err)
 		return menus, err
 	}
 
@@ -125,9 +116,6 @@ func (u menuUseCase) Get(r GetMenuRequest) (entity.Menu, error) {
 	var err error
 	if r.ID != 0 {
 		menu, err = u.menuRepository.GetByID(r.ID)
-		if err != nil {
-			log.Println(err)
-		}
 	} else if r.Date != 0 {
 		menu, err = u.menuRepository.GetByDate(r.Date, r.UserID)
 	}
