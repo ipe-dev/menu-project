@@ -16,13 +16,19 @@ func (p subMenuPersistence) GetByMenuID(MenuID int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
 	err := Db.Table("sub_menus").Where("menu_id = ?", MenuID).Find(&submenus).Error
-	return submenus, errors.NewInfraError(err, MenuID)
+	if err != nil {
+		return submenus, errors.NewInfraError(err, MenuID)
+	}
+	return submenus, nil
 }
 func (p subMenuPersistence) GetList(MenuIDList []int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
 	err := Db.Where("menu_id IN ?", MenuIDList).Find(&submenus).Error
-	return submenus, errors.NewInfraError(err, MenuIDList)
+	if err != nil {
+		return submenus, errors.NewInfraError(err, MenuIDList)
+	}
+	return submenus, nil
 }
 
 func (p subMenuPersistence) BulkCreate(submenus []entity.SubMenu) ([]entity.SubMenu, error) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/domain/service"
@@ -24,11 +25,19 @@ func main() {
 	userService := service.NewUserService(userPersistence)
 	userUseCase := usecase.NewUserUseCase(userPersistence, userService)
 	userHandler := handler.NewUserHandler(userUseCase)
-	authMiddleware := middleware.NewAuthMddleware(userUseCase)
+	authMiddleware := middleware.NewAuthMiddleware(userUseCase)
 	jwtMiddleware, err := authMiddleware.NewGinJWTMiddleware()
 	if err != nil {
 		log.Println(err)
 	}
+	errorMiddleware := middleware.NewErrorMiddleware()
+	if err != nil {
+		log.Println(err)
+	}
+	r.Use(errorMiddleware.ErrorHandle())
+
+	// login
+	r.StaticFS("/login", http.Dir("../../views/static"))
 
 	r.POST("/login", jwtMiddleware.LoginHandler)
 	r.POST("/logout", jwtMiddleware.LogoutHandler)

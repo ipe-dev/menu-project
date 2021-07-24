@@ -49,7 +49,10 @@ func (p userPersistence) Get(ID int) (*entity.User, error) {
 	Db := database.Db
 	var user entity.User
 	err := Db.Model(user).Where("id = ?", ID).Find(&user).Error
-	return &user, errors.NewInfraError(err, ID)
+	if err != nil {
+		return &user, errors.NewInfraError(err, ID)
+	}
+	return &user, nil
 }
 func (p userPersistence) GetByLoginID(LoginID string) (*entity.User, error) {
 	Db := database.Db

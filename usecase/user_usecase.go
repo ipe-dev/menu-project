@@ -89,10 +89,10 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, error) {
 	GetUser, err := u.userService.LoginAuthentication(r.LoginID, r.Password)
 	if err != nil {
-		return nil, err
+		return GetUser, err
 	}
 	if GetUser.ID == 0 {
-		return nil, errors.NewLoginNotFoundError("ユーザーが見つかりませんでした", r.LoginID, r.Password)
+		return GetUser, errors.NewLoginNotFoundError("ユーザーが見つかりませんでした", r.LoginID, r.Password)
 	}
 	return GetUser, nil
 

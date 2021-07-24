@@ -22,7 +22,7 @@ func (e errorMiddleware) ErrorHandle() gin.HandlerFunc {
 		c.Next()
 		err := c.Errors.ByType(gin.ErrorTypePublic).Last()
 		if err != nil {
-			log.Println(err.Error())
+			log.Println(err)
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"error": "エラーが発生しました",
 			})

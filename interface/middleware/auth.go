@@ -14,7 +14,7 @@ type AuthMiddleware interface {
 	NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error)
 }
 
-func NewAuthMddleware(u usecase.UserUseCase) AuthMiddleware {
+func NewAuthMiddleware(u usecase.UserUseCase) AuthMiddleware {
 	return authMiddleware{u}
 }
 
