@@ -4,8 +4,8 @@ import "time"
 
 type FoodStuff struct {
 	ID        int
-	MenuID    int
 	Name      string
+	UserID    int
 	BuyStatus int
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -20,13 +20,6 @@ func FoodStuffIDOption(ID int) FoodStuffOption {
 	return func(f *FoodStuff) {
 		if ID != 0 {
 			f.ID = ID
-		}
-	}
-}
-func FoodStuffMenuIDOption(MenuID int) FoodStuffOption {
-	return func(f *FoodStuff) {
-		if MenuID != 0 {
-			f.MenuID = MenuID
 		}
 	}
 }

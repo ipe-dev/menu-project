@@ -62,7 +62,6 @@ func (u foodStuffUseCase) BulkCreate(r BulkCreateFoodStuffRequest) ([]entity.Foo
 	for _, v := range r.CreateRequests {
 		foodstuff := entity.NewFoodStuff(
 			entity.FoodStuffMenuNameOption(v.Name),
-			entity.FoodStuffMenuIDOption(v.MenuID),
 		)
 		foodstuffs = append(foodstuffs, *foodstuff)
 	}
@@ -75,7 +74,6 @@ func (u foodStuffUseCase) BulkUpdate(r BulkUpdateFoodStuffRequest) ([]entity.Foo
 		foodstuff := entity.NewFoodStuff(
 			entity.FoodStuffIDOption(v.ID),
 			entity.FoodStuffMenuNameOption(v.Name),
-			entity.FoodStuffMenuIDOption(v.MenuID),
 		)
 		foodstuffs = append(foodstuffs, *foodstuff)
 	}

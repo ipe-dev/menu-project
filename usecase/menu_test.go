@@ -20,21 +20,21 @@ func TestCreateMenu(t *testing.T) {
 		Date:   date,
 		Kind:   entity.MenuKindLunch,
 		URL:    "https://www.google.com/",
-		UserID: 8,
+		UserID: 2,
 	}
 	r2 := CreateMenuRequest{
 		Name:   "寿司",
 		Date:   date,
 		Kind:   entity.MenuKindDinner,
 		URL:    "https://www.google.com/",
-		UserID: 8,
+		UserID: 2,
 	}
 	var requests []CreateMenuRequest
 	requests = append(requests, r)
 	requests = append(requests, r2)
 	bulkRequest := BulkCreateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewMenuFactory()
+	f := factory.NewWeekIDFactory()
 	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.BulkCreate(bulkRequest)
 	if e != nil {
@@ -56,7 +56,7 @@ func TestUpdateMenu(t *testing.T) {
 	requests = append(requests, r)
 	bulkRequest := BulkUpdateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewMenuFactory()
+	f := factory.NewWeekIDFactory()
 	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
@@ -73,7 +73,7 @@ func TestGetMenu(t *testing.T) {
 		UserID: 1,
 	}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewMenuFactory()
+	f := factory.NewWeekIDFactory()
 	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.Get(r)
 	fmt.Println(m)
@@ -90,7 +90,7 @@ func TestGetMenuList(t *testing.T) {
 		UserID: 1,
 	}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewMenuFactory()
+	f := factory.NewWeekIDFactory()
 	menuUseCase := NewMenuUseCase(p, f)
 	m, e := menuUseCase.GetList(r)
 	t.Log(m)

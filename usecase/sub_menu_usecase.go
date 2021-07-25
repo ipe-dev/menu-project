@@ -61,7 +61,6 @@ func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMen
 	for _, v := range bc.CreateRequests {
 		submenu := entity.NewSubMenu(
 			entity.SubMenuNameOption(v.Name),
-			entity.SubMenuMenuIDOption(v.MenuID),
 		)
 		submenus = append(submenus, *submenu)
 	}
@@ -74,7 +73,6 @@ func (u subMenuUseCase) BulkUpdate(r BulkUpdateSubMenuRequest) ([]entity.SubMenu
 		submenu := entity.NewSubMenu(
 			entity.SubMenuIDOption(v.ID),
 			entity.SubMenuNameOption(v.Name),
-			entity.SubMenuMenuIDOption(v.MenuID),
 		)
 
 		submenus = append(submenus, *submenu)

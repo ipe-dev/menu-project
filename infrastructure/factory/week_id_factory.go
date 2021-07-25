@@ -42,7 +42,7 @@ func (w weekIDFactory) IncrementWeekID(UserID int) error {
 		tx.Rollback()
 		return errors.NewInfraError(err, UserID)
 	}
-	if WeekIDs[0] == 0 {
+	if len(WeekIDs) == 0 {
 		tx.Rollback()
 		return errors.NewCustomError("WeekIDの更新に失敗しました", UserID)
 	}

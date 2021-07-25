@@ -66,9 +66,9 @@ func TestLoginUser(t *testing.T) {
 	p := persistence.NewUserPersistence()
 	s := service.NewUserService(p)
 	menuUseCase := NewUserUseCase(p, s)
-	m, b := menuUseCase.LoginAuthenticate(r)
-	if !b {
-		t.Fatalf("failed test %#v", b)
+	m, e := menuUseCase.LoginAuthenticate(r)
+	if e != nil {
+		t.Fatalf("failed test %#v", e)
 	} else {
 		t.Log(m)
 	}

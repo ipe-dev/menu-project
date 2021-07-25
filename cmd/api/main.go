@@ -92,19 +92,5 @@ func main() {
 		foodstuff.POST("/status", foodStuffHandler.HandleChangeBuyStatus())
 	}
 
-	// sub_food_stuff
-	subFoodStuffPersistence := persistence.NewSubFoodStuffPersistence()
-	subFoodStuffUseCase := usecase.NewSubFoodStuffUseCase(subFoodStuffPersistence)
-	subFoodStuffHandler := handler.NewSubFoodStuffHandler(subFoodStuffUseCase)
-
-	subfoodstuff := r.Group("/api/sub-foodstuff")
-	subfoodstuff.Use(jwtMiddleware.MiddlewareFunc())
-	{
-		subfoodstuff.POST("/get/list", subFoodStuffHandler.HandleGetList())
-		subfoodstuff.POST("/get", subFoodStuffHandler.HandleGet())
-		subfoodstuff.POST("/create", subFoodStuffHandler.HandleBulkCreate())
-		subfoodstuff.POST("/update", subFoodStuffHandler.HandleBulkUpdate())
-		subfoodstuff.POST("/status", subFoodStuffHandler.HandleChangeStatus())
-	}
 	r.Run()
 }

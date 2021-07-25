@@ -4,7 +4,7 @@ import (
 	"os"
 
 	_ "github.com/lib/pq"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -12,8 +12,8 @@ var Db *gorm.DB
 
 func Connect() {
 	var err error
-	dsn := os.Getenv("DSN")
-	Db, err = gorm.Open(postgres.Open(dsn))
+	dsn := os.Getenv("MySqlDsn")
+	Db, err = gorm.Open(mysql.Open(dsn))
 	if err != nil {
 		panic(err)
 	}
