@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/domain/service"
@@ -27,6 +26,9 @@ func main() {
 	userHandler := handler.NewUserHandler(userUseCase)
 	authMiddleware := middleware.NewAuthMiddleware(userUseCase)
 	jwtMiddleware, err := authMiddleware.NewGinJWTMiddleware()
+	headerMiddleWare := middleware.NewHeaderMiddleware()
+
+	r.Use(headerMiddleWare.SetHeader())
 	if err != nil {
 		log.Println(err)
 	}
@@ -36,11 +38,8 @@ func main() {
 	}
 	r.Use(errorMiddleware.ErrorHandle())
 
-	// login
-	r.StaticFS("/login", http.Dir("../../views/static"))
-
-	r.POST("/login", jwtMiddleware.LoginHandler)
-	r.POST("/logout", jwtMiddleware.LogoutHandler)
+	r.POST("/api/login", jwtMiddleware.LoginHandler)
+	r.POST("/api/logout", jwtMiddleware.LogoutHandler)
 	user := r.Group("/api/user")
 	{
 		user.POST("/get", userHandler.Get())
@@ -53,7 +52,6 @@ func main() {
 	weekIDFactory := factory.NewWeekIDFactory()
 	menuUsecase := usecase.NewMenuUseCase(menuPersistence, weekIDFactory)
 	menuHandler := handler.NewMenuHandler(menuUsecase)
-
 	menu := r.Group("/api/menu")
 	menu.Use(jwtMiddleware.MiddlewareFunc())
 	{
