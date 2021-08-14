@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/errors"
@@ -38,7 +36,6 @@ func (s userService) LoginAuthentication(LoginID string, Password string) (*enti
 	GetUser, err := s.UserRepository.GetByLoginID(LoginID)
 	hash := GetUser.Password
 	compareError := bcrypt.CompareHashAndPassword([]byte(hash), []byte(Password))
-	fmt.Println(GetUser.Password)
 	if compareError != nil {
 		return GetUser, errors.NewLoginPasswordError(compareError, hash, Password)
 	}
