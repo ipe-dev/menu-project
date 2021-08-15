@@ -6,6 +6,7 @@ type SubMenu struct {
 	ID        int
 	Name      string
 	UserID    int
+	MemoID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -32,4 +33,11 @@ func NewSubMenu(opts ...SubMenuOption) *SubMenu {
 		opt(submenu)
 	}
 	return submenu
+}
+func SubMenuMemoIDOption(MemoID int) SubMenuOption {
+	return func(m *SubMenu) {
+		if MemoID != 0 {
+			m.MemoID = MemoID
+		}
+	}
 }

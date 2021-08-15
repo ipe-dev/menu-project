@@ -8,7 +8,7 @@ import (
 
 type Menu struct {
 	ID        int
-	WeekID    int
+	MemoID    int
 	Name      string
 	Date      string
 	Kind      int
@@ -30,10 +30,10 @@ func MenuIDOption(ID int) MenuOption {
 		}
 	}
 }
-func MenuWeekIDOption(WeekID int) MenuOption {
+func MenuMemoIDOption(MemoID int) MenuOption {
 	return func(m *Menu) {
-		if WeekID != 0 {
-			m.WeekID = WeekID
+		if MemoID != 0 {
+			m.MemoID = MemoID
 		}
 	}
 }

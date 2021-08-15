@@ -85,13 +85,6 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 		menus = append(menus, *menu)
 	}
 	menus, err = u.menuRepository.BulkCreate(menus)
-	if err != nil {
-		return menus, err
-	}
-	err = u.weekIDFactory.IncrementWeekID(r.CreateRequests[0].UserID)
-	if err != nil {
-		return menus, err
-	}
 
 	return menus, nil
 }
