@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/domain/service"
 	"github.com/ipe-dev/menu_project/infrastructure/database"
-	"github.com/ipe-dev/menu_project/infrastructure/factory"
 	"github.com/ipe-dev/menu_project/infrastructure/persistence"
 	"github.com/ipe-dev/menu_project/interface/handler"
 	"github.com/ipe-dev/menu_project/interface/middleware"
@@ -47,10 +46,22 @@ func main() {
 		user.POST("/update", userHandler.Update())
 	}
 
+	// memo
+	memoPersistence := persistence.NewMemoPersistence()
+	memoUsecase := usecase.NewMemoUseCase(memoPersistence)
+	memoHandler := handler.NewMemoHandler(memoUsecase)
+	memo := r.Group("/api/memo")
+	memo.Use(jwtMiddleware.MiddlewareFunc())
+	{
+		memo.POST("/get/list", memoHandler.HandleGetList())
+		memo.POST("/get", memoHandler.HandleGet())
+		memo.POST("/create", memoHandler.HandleCreate())
+		memo.POST("/update", memoHandler.HandleUpdate())
+	}
+
 	// menu
 	menuPersistence := persistence.NewMenuPersistence()
-	weekIDFactory := factory.NewWeekIDFactory()
-	menuUsecase := usecase.NewMenuUseCase(menuPersistence, weekIDFactory)
+	menuUsecase := usecase.NewMenuUseCase(menuPersistence)
 	menuHandler := handler.NewMenuHandler(menuUsecase)
 	menu := r.Group("/api/menu")
 	menu.Use(jwtMiddleware.MiddlewareFunc())
