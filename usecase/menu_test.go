@@ -7,7 +7,6 @@ import (
 
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/infrastructure/database"
-	"github.com/ipe-dev/menu_project/infrastructure/factory"
 	persistence "github.com/ipe-dev/menu_project/infrastructure/persistence"
 )
 
@@ -56,8 +55,7 @@ func TestUpdateMenu(t *testing.T) {
 	requests = append(requests, r)
 	bulkRequest := BulkUpdateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewWeekIDFactory()
-	menuUseCase := NewMenuUseCase(p, f)
+	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
@@ -73,8 +71,7 @@ func TestGetMenu(t *testing.T) {
 		UserID: 1,
 	}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewWeekIDFactory()
-	menuUseCase := NewMenuUseCase(p, f)
+	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.Get(r)
 	fmt.Println(m)
 	if e != nil {
@@ -86,12 +83,11 @@ func TestGetMenu(t *testing.T) {
 func TestGetMenuList(t *testing.T) {
 	database.Connect()
 	r := GetMenuListRequest{
-		WeekID: 1,
+		MemoID: 1,
 		UserID: 1,
 	}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewWeekIDFactory()
-	menuUseCase := NewMenuUseCase(p, f)
+	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.GetList(r)
 	t.Log(m)
 	if e != nil {
