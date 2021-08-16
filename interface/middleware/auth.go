@@ -22,11 +22,25 @@ type authMiddleware struct {
 	usecase.UserUseCase
 }
 
+type User struct {
+	ID   int
+	Name string
+}
+
 func (m authMiddleware) NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
 	authMiddleWare, err := jwt.New(&jwt.GinJWTMiddleware{
 		Key:        []byte(os.Getenv("SECRET")),
 		Timeout:    time.Hour,
 		MaxRefresh: time.Hour,
+		PayloadFunc: func(data interface{}) jwt.MapClaims {
+			if v, ok := data.(*User); ok {
+				return jwt.MapClaims{
+					"id":   v.ID,
+					"name": v.Name,
+				}
+			}
+			return jwt.MapClaims{}
+		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var r usecase.LoginRequest
 			e := c.BindJSON(&r)
@@ -37,7 +51,10 @@ func (m authMiddleware) NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
 			if err != nil {
 				return nil, err
 			}
-			return *user, nil
+			return &User{
+				ID:   user.ID,
+				Name: user.Name,
+			}, nil
 		},
 	})
 	return authMiddleWare, err
