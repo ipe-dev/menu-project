@@ -33,8 +33,7 @@ func TestCreateMenu(t *testing.T) {
 	requests = append(requests, r2)
 	bulkRequest := BulkCreateMenuRequest{requests}
 	p := persistence.NewMenuPersistence()
-	f := factory.NewWeekIDFactory()
-	menuUseCase := NewMenuUseCase(p, f)
+	menuUseCase := NewMenuUseCase(p)
 	m, e := menuUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
