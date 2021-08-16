@@ -58,12 +58,12 @@ func (p menuPersistence) GetByDate(date int64, userID int) (entity.Menu, error) 
 	}
 	return menu, nil
 }
-func (p menuPersistence) GetList(weekID int, userID int) ([]entity.Menu, error) {
+func (p menuPersistence) GetList(memoID int, userID int) ([]entity.Menu, error) {
 	var menus []entity.Menu
 	Db := database.Db
-	err := Db.Where("week_id = ?", weekID).Where("user_id = ?", userID).Find(&menus).Error
+	err := Db.Where("memo_id = ?", memoID).Where("user_id = ?", userID).Find(&menus).Error
 	if err != nil {
-		return menus, errors.NewInfraError(err, weekID, userID)
+		return menus, errors.NewInfraError(err, userID)
 	}
 	return menus, nil
 }
