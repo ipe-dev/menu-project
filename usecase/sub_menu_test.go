@@ -12,11 +12,11 @@ func TestCreateSubMenu(t *testing.T) {
 	database.Connect()
 	r := CreateSubMenuRequest{
 		Name:   "大根おろし",
-		MenuID: 3,
+		MemoID: 3,
 	}
 	r2 := CreateSubMenuRequest{
 		Name:   "卵焼き",
-		MenuID: 1,
+		MemoID: 1,
 	}
 	var requests []CreateSubMenuRequest
 	requests = append(requests, r)
@@ -58,7 +58,7 @@ func TestGetSubMenu(t *testing.T) {
 	database.Connect()
 	r := GetSubMenuRequest{
 		ID:     1,
-		MenuID: 1,
+		MemoID: 1,
 	}
 	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
@@ -72,7 +72,7 @@ func TestGetSubMenu(t *testing.T) {
 func TestGetSubMenuList(t *testing.T) {
 	database.Connect()
 	r := GetSubMenuListRequest{
-		MenuIDList: []int{1, 2, 3},
+		MemoIDList: []int{1, 2, 3},
 	}
 	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)

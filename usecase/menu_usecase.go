@@ -25,27 +25,27 @@ func NewMenuUseCase(r repository.MenuRepository) MenuUseCase {
 
 type CreateMenuRequest struct {
 	Name   string `json:"name"`
-	Date   int64  `json:"date" validate:"required"`
-	Kind   int    `json:"kind" validate:"required"`
+	Date   int64  `json:"date" binding:"required"`
+	Kind   int    `json:"kind" binding:"required"`
 	URL    string `json:"url"`
-	UserID int    `json:"user_id" validate:"required"`
+	MemoID int    `json:"user_id" binding:"required"`
 }
 type UpdateMenuRequest struct {
-	ID     int    `json:"id" validate:"required"`
+	ID     int    `json:"id" binding:"required"`
 	Name   string `json:"name"`
-	Date   int64  `json:"date" validate:"required"`
-	Kind   int    `json:"kind" validate:"required"`
+	Date   int64  `json:"date" binding:"required"`
+	Kind   int    `json:"kind" binding:"required"`
 	URL    string `json:"url"`
-	UserID int    `json:"user_id" validate:"required"`
+	MemoID int    `json:"user_id" binding:"required"`
 }
 type GetMenuListRequest struct {
-	UserID int `json:"user_id" validate:"required"`
-	MemoID int `json:"memo_id" validate:"required"`
+	UserID int `json:"user_id"`
+	MemoID int `json:"memo_id" binding:"required"`
 }
 type GetMenuRequest struct {
-	ID     int   `json:"id" validate:"required"`
-	Date   int64 `json:"date" validate:"required"`
-	UserID int   `json:"user_id" validate:"required"`
+	ID     int   `json:"id" binding:"required"`
+	Date   int64 `json:"date" binding:"required"`
+	UserID int   `json:"user_id"`
 }
 type BulkCreateMenuRequest struct {
 	CreateRequests []CreateMenuRequest
@@ -72,7 +72,7 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) ([]entity.Menu, error) 
 			entity.MenuDateOption(mr.Date),
 			entity.MenuKindOption(mr.Kind),
 			entity.MenuUrlOption(mr.URL),
-			entity.MenuUserIDOption(mr.UserID),
+			entity.MenuMemoIDOption(mr.MemoID),
 		)
 		menus = append(menus, *menu)
 	}
@@ -89,7 +89,7 @@ func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) ([]entity.Menu, error) 
 			entity.MenuDateOption(mr.Date),
 			entity.MenuKindOption(mr.Kind),
 			entity.MenuUrlOption(mr.URL),
-			entity.MenuUserIDOption(mr.UserID),
+			entity.MenuMemoIDOption(mr.MemoID),
 		)
 		menus = append(menus, *menu)
 	}
@@ -102,11 +102,8 @@ func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) ([]entity.Menu, error) 
 func (u menuUseCase) Get(r GetMenuRequest) (entity.Menu, error) {
 	var menu entity.Menu
 	var err error
-	if r.ID != 0 {
-		menu, err = u.menuRepository.GetByID(r.ID)
-	} else if r.Date != 0 {
-		menu, err = u.menuRepository.GetByDate(r.Date, r.UserID)
-	}
+	menu, err = u.menuRepository.GetByID(r.ID)
+
 	return menu, err
 
 }

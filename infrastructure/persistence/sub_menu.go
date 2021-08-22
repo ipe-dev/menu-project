@@ -12,12 +12,12 @@ type subMenuPersistence struct{}
 func NewSubMenuPersistence() repository.SubMenuRepository {
 	return &subMenuPersistence{}
 }
-func (p subMenuPersistence) GetByMenuID(MenuID int) ([]entity.SubMenu, error) {
+func (p subMenuPersistence) GetByMemoID(MemoID int) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	Db := database.Db
-	err := Db.Table("sub_menus").Where("menu_id = ?", MenuID).Find(&submenus).Error
+	err := Db.Table("sub_menus").Where("memo_id = ?", MemoID).Find(&submenus).Error
 	if err != nil {
-		return submenus, errors.NewInfraError(err, MenuID)
+		return submenus, errors.NewInfraError(err, MemoID)
 	}
 	return submenus, nil
 }

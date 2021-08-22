@@ -23,12 +23,8 @@ func NewUserHandler(u usecase.UserUseCase) UserHandler {
 func (h userHandler) Get() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetUserRequest
-		e := c.BindJSON(&r)
-		if e != nil {
-			err := errors.NewValidateError(e, c.Request)
-			c.Error(err).SetType(gin.ErrorTypePublic)
-			return
-		}
+		id, _ := c.Get("id")
+		r.ID = id.(int)
 		u, e := h.UserUseCase.Get(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
@@ -63,6 +59,8 @@ func (h userHandler) Update() gin.HandlerFunc {
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
+		id, _ := c.Get("id")
+		r.ID = id.(int)
 		e = h.UserUseCase.Update(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)

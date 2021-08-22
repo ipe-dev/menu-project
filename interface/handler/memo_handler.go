@@ -84,6 +84,8 @@ func (h memoHandler) HandleGetList() gin.HandlerFunc {
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
+		id, _ := c.Get("id")
+		r.UserID = id.(int)
 		memos, e := h.memoUsecase.GetList(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)

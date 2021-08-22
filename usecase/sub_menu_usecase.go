@@ -21,15 +21,15 @@ func NewSubMenuUseCase(r repository.SubMenuRepository) SubMenuUseCase {
 
 type GetSubMenuRequest struct {
 	ID     int `json:"id"　validate:"required"`
-	MenuID int `json:"menu_id"　validate:"required"`
+	MemoID int `json:"memo_id"　validate:"required"`
 }
 type GetSubMenuListRequest struct {
-	MenuIDList []int `json:"menu_id_list"`
+	MemoIDList []int `json:"memo_id_list"`
 }
 type CreateSubMenuRequest struct {
 	ID     int    `json:"id"　validate:"required"`
 	Name   string `json:"name"　validate:"required"`
-	MenuID int    `json:"menu_id"　validate:"required"`
+	MemoID int    `json:"memo_id"　validate:"required"`
 }
 type BulkCreateSubMenuRequest struct {
 	CreateRequests []CreateSubMenuRequest
@@ -37,7 +37,7 @@ type BulkCreateSubMenuRequest struct {
 type UpdateSubMenuRequest struct {
 	ID     int    `json:"id"　validate:"required"`
 	Name   string `json:"name"`
-	MenuID int    `json:"menu_id"　validate:"required"`
+	MemoID int    `json:"memo_id"　validate:"required"`
 }
 type BulkUpdateSubMenuRequest struct {
 	UpdateRequests []UpdateSubMenuRequest
@@ -47,13 +47,13 @@ func (u subMenuUseCase) Get(r GetSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	var err error
 	if r.ID != 0 {
-		submenus, err = u.subMenuRepository.GetByMenuID(r.MenuID)
+		submenus, err = u.subMenuRepository.GetByMemoID(r.MemoID)
 	}
 	return submenus, err
 }
 
 func (u subMenuUseCase) GetList(r GetSubMenuListRequest) ([]entity.SubMenu, error) {
-	submenus, err := u.subMenuRepository.GetList(r.MenuIDList)
+	submenus, err := u.subMenuRepository.GetList(r.MemoIDList)
 	return submenus, err
 }
 func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMenu, error) {
@@ -71,7 +71,7 @@ func (u subMenuUseCase) BulkUpdate(r BulkUpdateSubMenuRequest) ([]entity.SubMenu
 	var submenus []entity.SubMenu
 	for _, v := range r.UpdateRequests {
 		submenu := entity.NewSubMenu(
-			entity.SubMenuIDOption(v.ID),
+			entity.SubMenuMemoIDOption(v.ID),
 			entity.SubMenuNameOption(v.Name),
 		)
 
