@@ -15,18 +15,16 @@ func TestCreateMenu(t *testing.T) {
 	// date := time.Now().AddDate(0, 0, 1).Unix()
 	date := time.Now().Unix()
 	r := CreateMenuRequest{
-		Name:   "ハンバーグ",
-		Date:   date,
-		Kind:   entity.MenuKindLunch,
-		URL:    "https://www.google.com/",
-		UserID: 2,
+		Name: "ハンバーグ",
+		Date: date,
+		Kind: entity.MenuKindLunch,
+		URL:  "https://www.google.com/",
 	}
 	r2 := CreateMenuRequest{
-		Name:   "寿司",
-		Date:   date,
-		Kind:   entity.MenuKindDinner,
-		URL:    "https://www.google.com/",
-		UserID: 2,
+		Name: "寿司",
+		Date: date,
+		Kind: entity.MenuKindDinner,
+		URL:  "https://www.google.com/",
 	}
 	var requests []CreateMenuRequest
 	requests = append(requests, r)
@@ -44,11 +42,10 @@ func TestCreateMenu(t *testing.T) {
 func TestUpdateMenu(t *testing.T) {
 	database.Connect()
 	r := UpdateMenuRequest{
-		ID:     1,
-		Name:   "タコライス",
-		Kind:   entity.MenuKindLunch,
-		URL:    "https://www.google.com/",
-		UserID: 1,
+		ID:   1,
+		Name: "タコライス",
+		Kind: entity.MenuKindLunch,
+		URL:  "https://www.google.com/",
 	}
 	var requests []UpdateMenuRequest
 	requests = append(requests, r)

@@ -55,7 +55,7 @@ type BulkUpdateMenuRequest struct {
 }
 
 func (u menuUseCase) GetList(r GetMenuListRequest) ([]entity.Menu, error) {
-	menus, err := u.menuRepository.GetList(r.MemoID, r.UserID)
+	menus, err := u.menuRepository.GetList(r.MemoID)
 	if err != nil {
 		return menus, err
 	}
