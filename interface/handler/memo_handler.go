@@ -27,6 +27,8 @@ func (h memoHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetMemoRequest
 		e := c.BindJSON(&r)
+		userID, _ := c.Get("id")
+		r.UserID = userID.(int)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
@@ -78,12 +80,6 @@ func (h memoHandler) HandleUpdate() gin.HandlerFunc {
 func (h memoHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r usecase.GetMemoListRequest
-		e := c.BindJSON(&r)
-		if e != nil {
-			err := errors.NewValidateError(e, c.Request)
-			c.Error(err).SetType(gin.ErrorTypePublic)
-			return
-		}
 		id, _ := c.Get("id")
 		r.UserID = id.(int)
 		memos, e := h.memoUsecase.GetList(r)

@@ -35,10 +35,11 @@ func (p memoPersistence) Update(memo entity.Memo) (entity.Memo, error) {
 	tx.Commit()
 	return res, nil
 }
-func (p memoPersistence) GetByID(id int) (entity.Memo, error) {
+
+func (p memoPersistence) GetByID(id int, userID int) (entity.Memo, error) {
 	var memo entity.Memo
 	Db := database.Db
-	err := Db.Table("memo").Where("id = ?", id).First(&memo).Error
+	err := Db.Table("memos").Where("id = ?", id).Where("user_id = ?", userID).First(&memo).Error
 	if err != nil {
 		return memo, errors.NewInfraError(err, id)
 	}

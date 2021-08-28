@@ -4,6 +4,7 @@ import "github.com/ipe-dev/menu_project/domain/entity/value"
 
 type Memo struct {
 	ID        int
+	UserID    int
 	Title     string
 	StartDate string
 	EndDate   string
@@ -12,6 +13,13 @@ type Memo struct {
 type MemoOption func(*Memo)
 
 func MemoIDOption(ID int) MemoOption {
+	return func(m *Memo) {
+		if ID != 0 {
+			m.ID = ID
+		}
+	}
+}
+func MemoUserIDOption(ID int) MemoOption {
 	return func(m *Memo) {
 		if ID != 0 {
 			m.ID = ID

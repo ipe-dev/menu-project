@@ -33,10 +33,11 @@ type UpdateMemoRequest struct {
 	EndDate   int64  `json:"end_date"`
 }
 type GetMemoListRequest struct {
-	UserID int `json:"user_id" validate:"required"`
+	UserID int `json:"user_id"`
 }
 type GetMemoRequest struct {
-	ID int `json:"id" validate:"required"`
+	ID     int `json:"id" validate:"required"`
+	UserID int
 }
 
 func (u memoUseCase) GetList(r GetMemoListRequest) ([]entity.Memo, error) {
@@ -74,7 +75,7 @@ func (u memoUseCase) Get(r GetMemoRequest) (entity.Memo, error) {
 	var memo entity.Memo
 	var err error
 	if r.ID != 0 {
-		memo, err = u.memoRepository.GetByID(r.ID)
+		memo, err = u.memoRepository.GetByID(r.ID, r.UserID)
 	}
 	return memo, err
 }
