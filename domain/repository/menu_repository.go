@@ -5,8 +5,8 @@ import (
 )
 
 type MenuRepository interface {
-	BulkCreate(menus []entity.Menu) ([]entity.Menu, error)
-	BulkUpdate(menus []entity.Menu) ([]entity.Menu, error)
+	BulkCreate(menus []entity.Menu) error
+	BulkUpdate(menus []entity.Menu) error
 	GetByID(id int) (entity.Menu, error)
 	GetList(memoID int) ([]entity.Menu, error)
 }
