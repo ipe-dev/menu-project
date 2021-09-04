@@ -18,8 +18,8 @@ type Menu struct {
 	UpdatedAt time.Time
 }
 
-const MenuKindLunch = 1
-const MenuKindDinner = 2
+const MenuKindLunch = 1  // 昼ご飯
+const MenuKindDinner = 2 // 夜ご飯
 
 type MenuOption func(*Menu)
 

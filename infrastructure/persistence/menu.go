@@ -12,30 +12,28 @@ type menuPersistence struct{}
 func NewMenuPersistence() repository.MenuRepository {
 	return &menuPersistence{}
 }
-func (p menuPersistence) BulkCreate(menus []entity.Menu) ([]entity.Menu, error) {
+func (p menuPersistence) BulkCreate(menus []entity.Menu) error {
 	tx := database.Db.Begin()
 	err := tx.Model(&menus).Create(menus).Error
 	if err != nil {
 		tx.Rollback()
-		return menus, errors.NewInfraError(err, menus)
+		return errors.NewInfraError(err, menus)
 	}
 	tx.Commit()
-	return menus, nil
+	return nil
 }
-func (p menuPersistence) BulkUpdate(menus []entity.Menu) ([]entity.Menu, error) {
+func (p menuPersistence) BulkUpdate(menus []entity.Menu) error {
 	tx := database.Db.Begin()
-	var res []entity.Menu
 	var err error
 	for _, menu := range menus {
 		err = tx.Model(&menu).Updates(menu).Error
 		if err != nil {
 			tx.Rollback()
-			return res, errors.NewInfraError(err, menu)
+			return errors.NewInfraError(err, menu)
 		}
-		res = append(res, menu)
 	}
 	tx.Commit()
-	return res, nil
+	return nil
 }
 func (p menuPersistence) GetByID(id int) (entity.Menu, error) {
 	var menu entity.Menu
