@@ -59,11 +59,14 @@ func (u userUseCase) Create(r CreateUserRequest) error {
 	if exists {
 		return errors.NewExistError("ログインIDが存在しています", r)
 	}
-	user := entity.NewUser(
+	user, err := entity.NewUser(
 		entity.UserNameOption(r.Name),
 		entity.LoginIDOption(r.LoginID),
 		entity.PasswordOption(r.Password),
 	)
+	if err != nil {
+		return err
+	}
 	err = u.userRepository.Create(*user)
 	return err
 }
@@ -76,12 +79,16 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 	if exists {
 		return errors.NewExistError("ログインIDが存在しています", r)
 	}
-	user := entity.NewUser(
+	user, err := entity.NewUser(
 		entity.UserIDOption(r.ID),
 		entity.UserNameOption(r.Name),
 		entity.LoginIDOption(r.LoginID),
 		entity.PasswordOption(r.Password),
 	)
+
+	if err != nil {
+		return err
+	}
 
 	err = u.userRepository.Update(*user)
 	return err

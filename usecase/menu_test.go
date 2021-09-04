@@ -64,7 +64,7 @@ func TestGetMenu(t *testing.T) {
 	time := time.Date(2021, 6, 4, 0, 0, 0, 0, time.Local).Unix()
 	r := GetMenuRequest{
 		Date:   time,
-		UserID: 1,
+		MemoID: 1,
 	}
 	p := persistence.NewMenuPersistence()
 	menuUseCase := NewMenuUseCase(p)
