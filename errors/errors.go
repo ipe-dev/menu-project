@@ -49,9 +49,6 @@ func NewInfraError(e error, values ...interface{}) *InfraError {
 	return &InfraError{e, msg, values}
 }
 func NewValidateError(e error, values ...interface{}) *ValidateError {
-	if e == nil {
-		return nil
-	}
 	pc, file, line, _ := runtime.Caller(1)
 	function := runtime.FuncForPC(pc)
 	msg := fmt.Sprintf("call:%s file:%s:%d", function, file, line)
