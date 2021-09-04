@@ -5,7 +5,6 @@ import "time"
 type SubMenu struct {
 	ID        int
 	Name      string
-	UserID    int
 	MemoID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
