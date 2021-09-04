@@ -7,6 +7,6 @@ import (
 type MemoRepository interface {
 	Create(memo entity.Memo) (entity.Memo, error)
 	Update(memo entity.Memo) (entity.Memo, error)
-	GetByID(id int, userID int) (entity.Memo, error)
+	GetByID(id int) (entity.Memo, error)
 	GetList(userID int) ([]entity.Memo, error)
 }

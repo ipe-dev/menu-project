@@ -1,6 +1,10 @@
 package entity
 
-import "github.com/ipe-dev/menu_project/domain/entity/value"
+import (
+	"time"
+
+	"github.com/ipe-dev/menu_project/domain/entity/value"
+)
 
 type Memo struct {
 	ID        int
@@ -8,6 +12,8 @@ type Memo struct {
 	Title     string
 	StartDate string
 	EndDate   string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type MemoOption func(*Memo)

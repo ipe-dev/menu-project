@@ -5,7 +5,7 @@ import "time"
 type FoodStuff struct {
 	ID        int
 	Name      string
-	UserID    int
+	MemoID    int
 	BuyStatus int
 	CreatedAt time.Time
 	UpdatedAt time.Time

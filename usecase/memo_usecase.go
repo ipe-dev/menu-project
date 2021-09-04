@@ -75,7 +75,7 @@ func (u memoUseCase) Get(r GetMemoRequest) (entity.Memo, error) {
 	var memo entity.Memo
 	var err error
 	if r.ID != 0 {
-		memo, err = u.memoRepository.GetByID(r.ID, r.UserID)
+		memo, err = u.memoRepository.GetByID(r.ID)
 	}
 	return memo, err
 }
