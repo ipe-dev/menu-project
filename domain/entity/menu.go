@@ -4,13 +4,14 @@ import (
 	"time"
 
 	"github.com/ipe-dev/menu_project/domain/entity/value"
+	"github.com/ipe-dev/menu_project/errors"
 )
 
 type Menu struct {
 	ID        int
 	MemoID    int
 	Name      string
-	Date      string
+	Date      time.Time
 	Kind      int
 	URL       string
 	UserID    int
@@ -23,6 +24,12 @@ const MenuKindDinner = 2 // 夜ご飯
 
 type MenuOption func(*Menu)
 
+func (menu Menu) CheckMenuDate(memo Memo) error {
+	if menu.Date.Before(memo.StartDate) || menu.Date.After(memo.EndDate) {
+		return errors.NewCustomError("日付が不正です", menu.Date, memo.StartDate, memo.EndDate)
+	}
+	return nil
+}
 func MenuIDOption(ID int) MenuOption {
 	return func(m *Menu) {
 		if ID != 0 {

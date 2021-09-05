@@ -70,16 +70,16 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) error {
 	var err error
 
 	// memoの存在チェック
-	err = u.memoService.CheckMemoExists(r.MemoID)
-	if err != nil {
+	if err = u.memoService.CheckMemoExists(r.MemoID); err != nil {
 		return err
 	}
 
 	memo, err := u.memoRepository.GetByID(r.MemoID)
+	if err != nil {
+		return err
+	}
 
 	for _, mr := range r.CreateRequests {
-		// menuの日付がメモの日付の期間内かチェック
-		entity.CheckMenuDate(memo, mr.Date)
 		menu := entity.NewMenu(
 			entity.MenuNameOption(mr.Name),
 			entity.MenuDateOption(mr.Date),
@@ -87,6 +87,10 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) error {
 			entity.MenuUrlOption(mr.URL),
 			entity.MenuMemoIDOption(r.MemoID),
 		)
+		if err = menu.CheckMenuDate(memo); err != nil {
+			return err
+		}
+
 		menus = append(menus, *menu)
 	}
 	err = u.menuRepository.BulkCreate(menus)
@@ -95,6 +99,15 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) error {
 }
 func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) error {
 	var menus []entity.Menu
+	var err error
+	if err = u.memoService.CheckMemoExists(r.MemoID); err != nil {
+		return err
+	}
+	memo, err := u.memoRepository.GetByID(r.MemoID)
+	if err != nil {
+		return err
+	}
+
 	for _, mr := range r.UpdateRequests {
 		menu := entity.NewMenu(
 			entity.MenuIDOption(mr.ID),
@@ -104,9 +117,12 @@ func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) error {
 			entity.MenuUrlOption(mr.URL),
 			entity.MenuMemoIDOption(r.MemoID),
 		)
+		if err = menu.CheckMenuDate(memo); err != nil {
+			return err
+		}
 		menus = append(menus, *menu)
 	}
-	err := u.menuRepository.BulkUpdate(menus)
+	err = u.menuRepository.BulkUpdate(menus)
 	if err != nil {
 		log.Println(err)
 	}
