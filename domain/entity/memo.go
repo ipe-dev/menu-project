@@ -10,8 +10,8 @@ type Memo struct {
 	ID        int
 	UserID    int
 	Title     string
-	StartDate string
-	EndDate   string
+	StartDate time.Time
+	EndDate   time.Time
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
