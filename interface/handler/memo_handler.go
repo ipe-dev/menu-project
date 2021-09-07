@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type MemoHandler interface {
@@ -25,7 +26,7 @@ type memoHandler struct {
 
 func (h memoHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetMemoRequest
+		var r requests.GetMemoRequest
 		e := c.BindJSON(&r)
 		userID, _ := c.Get("id")
 		r.UserID = userID.(int)
@@ -45,41 +46,41 @@ func (h memoHandler) HandleGet() gin.HandlerFunc {
 
 func (h memoHandler) HandleCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.CreateMemoRequest
+		var r requests.CreateMemoRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
-		memos, e := h.memoUsecase.Create(r)
+		e = h.memoUsecase.Create(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			c.JSON(http.StatusOK, memos)
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h memoHandler) HandleUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.UpdateMemoRequest
+		var r requests.UpdateMemoRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
-		memos, e := h.memoUsecase.Update(r)
+		e = h.memoUsecase.Update(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			c.JSON(http.StatusOK, memos)
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h memoHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetMemoListRequest
+		var r requests.GetMemoListRequest
 		id, _ := c.Get("id")
 		r.UserID = id.(int)
 		memos, e := h.memoUsecase.GetList(r)

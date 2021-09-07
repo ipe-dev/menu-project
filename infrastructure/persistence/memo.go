@@ -58,11 +58,12 @@ func (p memoPersistence) GetList(userID int) ([]entity.Memo, error) {
 	}
 	return memo, nil
 }
-func (q memoQueryService) GetMemoWithAccompanyingData(ID int) (dto.MemoDto, error) {
+func (q memoQueryService) GetMemoWithAccompanyingData(ID int, UserID int) (dto.MemoDto, error) {
 	Db := database.Db
 	var memoDto dto.MemoDto
 
 	err := Db.Table("memos").Where("id = ?", ID).
+		Where("user_id = ?", UserID).
 		Joins("left join menus on memos.id = menus.memo_id").
 		Joins("left join sub_menus on memos.id = sub_menus.memo_id").
 		Joins("left join food_stuffs on memos.id = food_stuffs.memo_id").

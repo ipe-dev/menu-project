@@ -57,6 +57,6 @@ func (u memoUseCase) Update(r requests.UpdateMemoRequest) error {
 	return nil
 }
 func (u memoUseCase) Get(r requests.GetMemoRequest) (dto.MemoDto, error) {
-	memo, err := u.memoQueryService.GetMemoWithAccompanyingData(r.ID)
+	memo, err := u.memoQueryService.GetMemoWithAccompanyingData(r.ID, r.UserID)
 	return memo, err
 }
