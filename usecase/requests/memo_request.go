@@ -13,6 +13,5 @@ type GetMemoListRequest struct {
 	UserID int `json:"user_id"`
 }
 type GetMemoRequest struct {
-	ID     int `json:"id" binding:"required"`
-	UserID int
+	ID int `json:"id" binding:"required"`
 }
