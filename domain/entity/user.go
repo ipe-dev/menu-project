@@ -23,6 +23,7 @@ func UserIDOption(ID int) UserOption {
 			u.ID = ID
 			return nil
 		}
+		return errors.NewCustomError("User作成エラー：IDがありません")
 	}
 }
 func UserNameOption(Name string) UserOption {
@@ -31,6 +32,7 @@ func UserNameOption(Name string) UserOption {
 			u.Name = Name
 			return nil
 		}
+		return errors.NewCustomError("User作成エラー：ユーザー名がありません")
 	}
 }
 func LoginIDOption(LoginID string) UserOption {
@@ -40,7 +42,7 @@ func LoginIDOption(LoginID string) UserOption {
 			u.LoginID, err = value.NewLoginID(LoginID)
 			return err
 		}
-		return errors.NewValidateError(nil, "ログインIDが入力されていません")
+		return errors.NewCustomError("User作成エラー：ログインIDが入力されていません")
 	}
 }
 func PasswordOption(Password string) UserOption {
@@ -50,7 +52,7 @@ func PasswordOption(Password string) UserOption {
 			u.Password, err = value.NewPassword(Password)
 			return err
 		}
-		return errors.NewValidateError(nil, "パスワードが入力されていません")
+		return errors.NewCustomError("User作成エラー：パスワードが入力されていません")
 	}
 }
 func NewUser(opts ...UserOption) (*User, error) {

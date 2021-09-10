@@ -25,7 +25,7 @@ func MemoIDOption(ID int) MemoOption {
 			m.ID = ID
 			return nil
 		}
-		return errors.NewCustomError("IDがありません")
+		return errors.NewCustomError("Memo作成エラー：IDがありません")
 	}
 }
 func MemoUserIDOption(UserID int) MemoOption {
@@ -34,7 +34,7 @@ func MemoUserIDOption(UserID int) MemoOption {
 			m.ID = UserID
 			return nil
 		}
-		return errors.NewCustomError("ユーザーIDがありません")
+		return errors.NewCustomError("Memo作成エラー：ユーザーIDがありません")
 	}
 }
 func MemoTitleOption(Title string) MemoOption {
@@ -43,7 +43,7 @@ func MemoTitleOption(Title string) MemoOption {
 			m.Title = Title
 		}
 
-		return errors.NewCustomError("メモタイトルがありません")
+		return errors.NewCustomError("Memo作成エラー：メモタイトルがありません")
 	}
 }
 func MemoStartDateOption(Timestamp int64) MemoOption {
@@ -52,7 +52,7 @@ func MemoStartDateOption(Timestamp int64) MemoOption {
 			m.StartDate = value.NewDate(Timestamp)
 			return nil
 		}
-		return errors.NewCustomError("開始日がありません")
+		return errors.NewCustomError("Memo作成エラー：開始日がありません")
 	}
 }
 func MemoEndDateOption(Timestamp int64) MemoOption {
@@ -61,7 +61,7 @@ func MemoEndDateOption(Timestamp int64) MemoOption {
 			m.EndDate = value.NewDate(Timestamp)
 			return nil
 		}
-		return errors.NewCustomError("終了日がありません")
+		return errors.NewCustomError("Memo作成エラー：終了日がありません")
 	}
 }
 func NewMemo(opts ...MemoOption) (*Memo, error) {
