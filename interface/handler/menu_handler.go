@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type MenuHandler interface {
@@ -25,7 +26,7 @@ type menuHandler struct {
 
 func (h menuHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetMenuRequest
+		var r requests.GetMenuRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
@@ -43,41 +44,41 @@ func (h menuHandler) HandleGet() gin.HandlerFunc {
 
 func (h menuHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.BulkCreateMenuRequest
+		var r requests.BulkCreateMenuRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
-		menus, e := h.menuUsecase.BulkCreate(r)
+		e = h.menuUsecase.BulkCreate(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			c.JSON(http.StatusOK, menus)
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h menuHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.BulkUpdateMenuRequest
+		var r requests.BulkUpdateMenuRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
-		menus, e := h.menuUsecase.BulkUpdate(r)
+		e = h.menuUsecase.BulkUpdate(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			c.JSON(http.StatusOK, menus)
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h menuHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetMenuListRequest
+		var r requests.GetMenuListRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)

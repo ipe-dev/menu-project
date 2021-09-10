@@ -6,57 +6,58 @@ import (
 
 	"github.com/ipe-dev/menu_project/infrastructure/database"
 	"github.com/ipe-dev/menu_project/infrastructure/persistence"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 func TestCreateSubMenu(t *testing.T) {
 	database.Connect()
-	r := CreateSubMenuRequest{
+	r := requests.CreateSubMenuRequest{
 		Name:   "大根おろし",
 		MemoID: 3,
 	}
-	r2 := CreateSubMenuRequest{
+	r2 := requests.CreateSubMenuRequest{
 		Name:   "卵焼き",
 		MemoID: 1,
 	}
-	var requests []CreateSubMenuRequest
-	requests = append(requests, r)
-	requests = append(requests, r2)
-	bulkRequest := BulkCreateSubMenuRequest{requests}
+	var req []requests.CreateSubMenuRequest
+	req = append(req, r)
+	req = append(req, r2)
+	bulkRequest := requests.BulkCreateSubMenuRequest{req}
 	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
-	m, e := menuUseCase.BulkCreate(bulkRequest)
+	e := menuUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
-		fmt.Println(m)
+		fmt.Println("success")
 	}
 }
 func TestUpdateSubMenu(t *testing.T) {
 	database.Connect()
-	r := UpdateSubMenuRequest{
+	r := requests.UpdateSubMenuRequest{
 		ID:   1,
 		Name: "コブサラダ",
 	}
-	r2 := UpdateSubMenuRequest{
+	r2 := requests.UpdateSubMenuRequest{
 		ID:   2,
 		Name: "お茶漬け",
 	}
-	var requests []UpdateSubMenuRequest
-	requests = append(requests, r)
-	requests = append(requests, r2)
-	bulkRequest := BulkUpdateSubMenuRequest{requests}
+	var req []requests.UpdateSubMenuRequest
+	req = append(req, r)
+	req = append(req, r2)
+	bulkRequest := requests.BulkUpdateSubMenuRequest{req}
 	p := persistence.NewSubMenuPersistence()
 	menuUseCase := NewSubMenuUseCase(p)
-	m, e := menuUseCase.BulkUpdate(bulkRequest)
+	e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
-		fmt.Println(m)
+		fmt.Println("success")
 	}
 }
 func TestGetSubMenu(t *testing.T) {
 	database.Connect()
-	r := GetSubMenuRequest{
+	r := requests.GetSubMenuRequest{
 		ID:     1,
 		MemoID: 1,
 	}
@@ -71,7 +72,7 @@ func TestGetSubMenu(t *testing.T) {
 }
 func TestGetSubMenuList(t *testing.T) {
 	database.Connect()
-	r := GetSubMenuListRequest{
+	r := requests.GetSubMenuListRequest{
 		MemoIDList: []int{1, 2, 3},
 	}
 	p := persistence.NewSubMenuPersistence()

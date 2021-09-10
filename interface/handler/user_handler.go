@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type UserHandler interface {
@@ -22,7 +23,7 @@ func NewUserHandler(u usecase.UserUseCase) UserHandler {
 }
 func (h userHandler) Get() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetUserRequest
+		var r requests.GetUserRequest
 		id, _ := c.Get("id")
 		r.ID = id.(int)
 		u, e := h.UserUseCase.Get(r)
@@ -35,7 +36,7 @@ func (h userHandler) Get() gin.HandlerFunc {
 }
 func (h userHandler) Create() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.CreateUserRequest
+		var r requests.CreateUserRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
@@ -52,7 +53,7 @@ func (h userHandler) Create() gin.HandlerFunc {
 }
 func (h userHandler) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.UpdateUserRequest
+		var r requests.UpdateUserRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)

@@ -3,13 +3,14 @@ package usecase
 import (
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type SubMenuUseCase interface {
-	Get(GetSubMenuRequest) ([]entity.SubMenu, error)
-	GetList(GetSubMenuListRequest) ([]entity.SubMenu, error)
-	BulkCreate(BulkCreateSubMenuRequest) ([]entity.SubMenu, error)
-	BulkUpdate(BulkUpdateSubMenuRequest) ([]entity.SubMenu, error)
+	Get(requests.GetSubMenuRequest) ([]entity.SubMenu, error)
+	GetList(requests.GetSubMenuListRequest) ([]entity.SubMenu, error)
+	BulkCreate(requests.BulkCreateSubMenuRequest) error
+	BulkUpdate(requests.BulkUpdateSubMenuRequest) error
 }
 type subMenuUseCase struct {
 	subMenuRepository repository.SubMenuRepository
@@ -19,31 +20,7 @@ func NewSubMenuUseCase(r repository.SubMenuRepository) SubMenuUseCase {
 	return &subMenuUseCase{r}
 }
 
-type GetSubMenuRequest struct {
-	ID     int `json:"id"　validate:"required"`
-	MemoID int `json:"memo_id"　validate:"required"`
-}
-type GetSubMenuListRequest struct {
-	MemoIDList []int `json:"memo_id_list"`
-}
-type CreateSubMenuRequest struct {
-	ID     int    `json:"id"　validate:"required"`
-	Name   string `json:"name"　validate:"required"`
-	MemoID int    `json:"memo_id"　validate:"required"`
-}
-type BulkCreateSubMenuRequest struct {
-	CreateRequests []CreateSubMenuRequest
-}
-type UpdateSubMenuRequest struct {
-	ID     int    `json:"id"　validate:"required"`
-	Name   string `json:"name"`
-	MemoID int    `json:"memo_id"　validate:"required"`
-}
-type BulkUpdateSubMenuRequest struct {
-	UpdateRequests []UpdateSubMenuRequest
-}
-
-func (u subMenuUseCase) Get(r GetSubMenuRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) Get(r requests.GetSubMenuRequest) ([]entity.SubMenu, error) {
 	var submenus []entity.SubMenu
 	var err error
 	if r.ID != 0 {
@@ -52,11 +29,11 @@ func (u subMenuUseCase) Get(r GetSubMenuRequest) ([]entity.SubMenu, error) {
 	return submenus, err
 }
 
-func (u subMenuUseCase) GetList(r GetSubMenuListRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) GetList(r requests.GetSubMenuListRequest) ([]entity.SubMenu, error) {
 	submenus, err := u.subMenuRepository.GetList(r.MemoIDList)
 	return submenus, err
 }
-func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) BulkCreate(bc requests.BulkCreateSubMenuRequest) error {
 	var submenus []entity.SubMenu
 	for _, v := range bc.CreateRequests {
 		submenu := entity.NewSubMenu(
@@ -64,10 +41,10 @@ func (u subMenuUseCase) BulkCreate(bc BulkCreateSubMenuRequest) ([]entity.SubMen
 		)
 		submenus = append(submenus, *submenu)
 	}
-	submenus, err := u.subMenuRepository.BulkCreate(submenus)
-	return submenus, err
+	err := u.subMenuRepository.BulkCreate(submenus)
+	return err
 }
-func (u subMenuUseCase) BulkUpdate(r BulkUpdateSubMenuRequest) ([]entity.SubMenu, error) {
+func (u subMenuUseCase) BulkUpdate(r requests.BulkUpdateSubMenuRequest) error {
 	var submenus []entity.SubMenu
 	for _, v := range r.UpdateRequests {
 		submenu := entity.NewSubMenu(
@@ -77,6 +54,6 @@ func (u subMenuUseCase) BulkUpdate(r BulkUpdateSubMenuRequest) ([]entity.SubMenu
 
 		submenus = append(submenus, *submenu)
 	}
-	submenus, err := u.subMenuRepository.BulkUpdate(submenus)
-	return submenus, err
+	err := u.subMenuRepository.BulkUpdate(submenus)
+	return err
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type FoodStuffHandler interface {
@@ -25,7 +26,7 @@ func NewFoodStuffHandler(u usecase.FoodStuffUseCase) FoodStuffHandler {
 
 func (h foodStuffHandler) HandleGet() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetFoodStuffRequest
+		var r requests.GetFoodStuffRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
@@ -44,41 +45,41 @@ func (h foodStuffHandler) HandleGet() gin.HandlerFunc {
 
 func (h foodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.BulkCreateFoodStuffRequest
+		var r requests.BulkCreateFoodStuffRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
-		f, e := h.foodStuffUseCase.BulkCreate(r)
+		e = h.foodStuffUseCase.BulkCreate(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			c.JSON(http.StatusOK, f)
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h foodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.BulkUpdateFoodStuffRequest
+		var r requests.BulkUpdateFoodStuffRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
 			c.Error(err).SetType(gin.ErrorTypePublic)
 			return
 		}
-		f, e := h.foodStuffUseCase.BulkUpdate(r)
+		e = h.foodStuffUseCase.BulkUpdate(r)
 		if e != nil {
 			c.Error(e).SetType(gin.ErrorTypePublic)
 		} else {
-			c.JSON(http.StatusOK, f)
+			c.JSON(http.StatusOK, gin.H{})
 		}
 	}
 }
 func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.GetFoodStuffListRequest
+		var r requests.GetFoodStuffListRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
@@ -95,7 +96,7 @@ func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 }
 func (h foodStuffHandler) HandleChangeBuyStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var r usecase.ChangeFoodStuffStatusRequest
+		var r requests.ChangeFoodStuffStatusRequest
 		e := c.BindJSON(&r)
 		if e != nil {
 			err := errors.NewValidateError(e, c.Request)
