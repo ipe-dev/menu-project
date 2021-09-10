@@ -6,57 +6,58 @@ import (
 
 	"github.com/ipe-dev/menu_project/infrastructure/database"
 	"github.com/ipe-dev/menu_project/infrastructure/persistence"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 func TestCreateFoodStuff(t *testing.T) {
 	database.Connect()
-	r := CreateFoodStuffRequest{
+	r := requests.CreateFoodStuffRequest{
 		Name:   "プチトマト",
 		MenuID: 1,
 	}
-	r2 := CreateFoodStuffRequest{
+	r2 := requests.CreateFoodStuffRequest{
 		Name:   "ひき肉",
 		MenuID: 1,
 	}
-	var requests []CreateFoodStuffRequest
-	requests = append(requests, r)
-	requests = append(requests, r2)
-	bulkRequest := BulkCreateFoodStuffRequest{requests}
+	var req []requests.CreateFoodStuffRequest
+	req = append(req, r)
+	req = append(req, r2)
+	bulkRequest := requests.BulkCreateFoodStuffRequest{req}
 	p := persistence.NewFoodStuffPersistence()
 	foodStuffUseCase := NewFoodStuffUseCase(p)
-	m, e := foodStuffUseCase.BulkCreate(bulkRequest)
+	e := foodStuffUseCase.BulkCreate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
-		fmt.Println(m)
+		fmt.Println("success")
 	}
 }
 func TestUpdateFoodStuff(t *testing.T) {
 	database.Connect()
-	r := UpdateFoodStuffRequest{
+	r := requests.UpdateFoodStuffRequest{
 		ID:   1,
 		Name: "レタス",
 	}
-	r2 := UpdateFoodStuffRequest{
+	r2 := requests.UpdateFoodStuffRequest{
 		ID:   2,
 		Name: "ニンジン",
 	}
-	var requests []UpdateFoodStuffRequest
-	requests = append(requests, r)
-	requests = append(requests, r2)
-	bulkRequest := BulkUpdateFoodStuffRequest{requests}
+	var req []requests.UpdateFoodStuffRequest
+	req = append(req, r)
+	req = append(req, r2)
+	bulkRequest := requests.BulkUpdateFoodStuffRequest{req}
 	p := persistence.NewFoodStuffPersistence()
 	menuUseCase := NewFoodStuffUseCase(p)
-	m, e := menuUseCase.BulkUpdate(bulkRequest)
+	e := menuUseCase.BulkUpdate(bulkRequest)
 	if e != nil {
 		t.Fatalf("failed test %#v", e)
 	} else {
-		fmt.Println(m)
+		fmt.Println("success")
 	}
 }
 func TestGetFoodStuff(t *testing.T) {
 	database.Connect()
-	r := GetFoodStuffRequest{
+	r := requests.GetFoodStuffRequest{
 		MenuID: 1,
 	}
 	p := persistence.NewFoodStuffPersistence()
@@ -71,7 +72,7 @@ func TestGetFoodStuff(t *testing.T) {
 
 func TestGetFoodStuffList(t *testing.T) {
 	database.Connect()
-	r := GetFoodStuffListRequest{
+	r := requests.GetFoodStuffListRequest{
 		MenuIDList: []int{1, 2, 3},
 	}
 	p := persistence.NewFoodStuffPersistence()
@@ -86,7 +87,7 @@ func TestGetFoodStuffList(t *testing.T) {
 }
 func TestChangeFoodStuffStatus(t *testing.T) {
 	database.Connect()
-	r := ChangeFoodStuffStatusRequest{
+	r := requests.ChangeFoodStuffStatusRequest{
 		ID:     1,
 		Status: 1,
 	}

@@ -5,13 +5,14 @@ import (
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/domain/service"
 	"github.com/ipe-dev/menu_project/errors"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type UserUseCase interface {
-	Get(GetUserRequest) (*entity.User, error)
-	Create(CreateUserRequest) error
-	Update(UpdateUserRequest) error
-	LoginAuthenticate(LoginRequest) (*entity.User, error)
+	Get(requests.GetUserRequest) (*entity.User, error)
+	Create(requests.CreateUserRequest) error
+	Update(requests.UpdateUserRequest) error
+	LoginAuthenticate(requests.LoginRequest) (*entity.User, error)
 }
 type userUseCase struct {
 	userRepository repository.UserRepository
@@ -22,34 +23,12 @@ func NewUserUseCase(r repository.UserRepository, s service.UserService) UserUseC
 	return &userUseCase{r, s}
 }
 
-type GetUserRequest struct {
-	ID int `json:"id"`
-}
-type CreateUserRequest struct {
-	Name     string `json:"name" binding:"required"`
-	LoginID  string `json:"login_id" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-type UpdateUserRequest struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name" binding:"required"`
-	LoginID  string `json:"login_id" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-type LoginRequest struct {
-	LoginID  string `json:"login_id" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-type LogoutRequest struct {
-	ID int `json"id" binding:"required"`
-}
-
-func (u userUseCase) Get(r GetUserRequest) (*entity.User, error) {
+func (u userUseCase) Get(r requests.GetUserRequest) (*entity.User, error) {
 	user, err := u.userRepository.Get(r.ID)
 	return user, err
 }
 
-func (u userUseCase) Create(r CreateUserRequest) error {
+func (u userUseCase) Create(r requests.CreateUserRequest) error {
 
 	// ログインID使用済みチェック
 	exists, err := u.userService.CheckUserExists(0, r.LoginID)
@@ -70,7 +49,7 @@ func (u userUseCase) Create(r CreateUserRequest) error {
 	err = u.userRepository.Create(*user)
 	return err
 }
-func (u userUseCase) Update(r UpdateUserRequest) error {
+func (u userUseCase) Update(r requests.UpdateUserRequest) error {
 	// ログインID使用済みチェック
 	exists, err := u.userService.CheckUserExists(r.ID, r.LoginID)
 	if err != nil {
@@ -93,7 +72,7 @@ func (u userUseCase) Update(r UpdateUserRequest) error {
 	err = u.userRepository.Update(*user)
 	return err
 }
-func (u userUseCase) LoginAuthenticate(r LoginRequest) (*entity.User, error) {
+func (u userUseCase) LoginAuthenticate(r requests.LoginRequest) (*entity.User, error) {
 	GetUser, err := u.userService.LoginAuthentication(r.LoginID, r.Password)
 	if err != nil {
 		return GetUser, err

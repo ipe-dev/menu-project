@@ -6,13 +6,14 @@ import (
 	"github.com/ipe-dev/menu_project/domain/entity"
 	"github.com/ipe-dev/menu_project/domain/repository"
 	"github.com/ipe-dev/menu_project/domain/service"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type MenuUseCase interface {
-	GetList(GetMenuListRequest) ([]entity.Menu, error)
-	BulkCreate(BulkCreateMenuRequest) error
-	BulkUpdate(BulkUpdateMenuRequest) error
-	Get(GetMenuRequest) (entity.Menu, error)
+	GetList(requests.GetMenuListRequest) ([]entity.Menu, error)
+	BulkCreate(requests.BulkCreateMenuRequest) error
+	BulkUpdate(requests.BulkUpdateMenuRequest) error
+	Get(requests.GetMenuRequest) (entity.Menu, error)
 }
 type menuUseCase struct {
 	menuRepository repository.MenuRepository
@@ -28,35 +29,7 @@ func NewMenuUseCase(menuRepo repository.MenuRepository, memoRepo repository.Memo
 	}
 }
 
-type CreateMenuRequest struct {
-	Name string `json:"name"`
-	Date int64  `json:"date" binding:"required"`
-	Kind int    `json:"kind" binding:"required"`
-	URL  string `json:"url"`
-}
-type UpdateMenuRequest struct {
-	ID   int    `json:"id" binding:"required"`
-	Name string `json:"name"`
-	Date int64  `json:"date" binding:"required"`
-	Kind int    `json:"kind" binding:"required"`
-	URL  string `json:"url"`
-}
-type GetMenuListRequest struct {
-	MemoID int `json:"memo_id" binding:"required"`
-}
-type GetMenuRequest struct {
-	ID int `json:"id" binding:"required"`
-}
-type BulkCreateMenuRequest struct {
-	MemoID         int `json:"memo_id"`
-	CreateRequests []CreateMenuRequest
-}
-type BulkUpdateMenuRequest struct {
-	MemoID         int `json:"memo_id"`
-	UpdateRequests []UpdateMenuRequest
-}
-
-func (u menuUseCase) GetList(r GetMenuListRequest) ([]entity.Menu, error) {
+func (u menuUseCase) GetList(r requests.GetMenuListRequest) ([]entity.Menu, error) {
 	menus, err := u.menuRepository.GetList(r.MemoID)
 	if err != nil {
 		return menus, err
@@ -64,7 +37,7 @@ func (u menuUseCase) GetList(r GetMenuListRequest) ([]entity.Menu, error) {
 	return menus, nil
 }
 
-func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) error {
+func (u menuUseCase) BulkCreate(r requests.BulkCreateMenuRequest) error {
 
 	var menus []entity.Menu
 	var err error
@@ -97,7 +70,7 @@ func (u menuUseCase) BulkCreate(r BulkCreateMenuRequest) error {
 
 	return err
 }
-func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) error {
+func (u menuUseCase) BulkUpdate(r requests.BulkUpdateMenuRequest) error {
 	var menus []entity.Menu
 	var err error
 	if err = u.memoService.CheckMemoExists(r.MemoID); err != nil {
@@ -128,7 +101,7 @@ func (u menuUseCase) BulkUpdate(r BulkUpdateMenuRequest) error {
 	}
 	return err
 }
-func (u menuUseCase) Get(r GetMenuRequest) (entity.Menu, error) {
+func (u menuUseCase) Get(r requests.GetMenuRequest) (entity.Menu, error) {
 	var menu entity.Menu
 	var err error
 	menu, err = u.menuRepository.GetByID(r.ID)

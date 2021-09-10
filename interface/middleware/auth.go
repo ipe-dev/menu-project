@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ipe-dev/menu_project/errors"
 	"github.com/ipe-dev/menu_project/usecase"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 type AuthMiddleware interface {
@@ -47,7 +48,7 @@ func (m authMiddleware) NewGinJWTMiddleware() (*jwt.GinJWTMiddleware, error) {
 			return int(claims["id"].(float64))
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var r usecase.LoginRequest
+			var r requests.LoginRequest
 			e := c.BindJSON(&r)
 			if e != nil {
 				return nil, errors.NewValidateError(e, c.Request)

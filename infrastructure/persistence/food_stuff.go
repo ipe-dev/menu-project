@@ -30,30 +30,28 @@ func (p foodStuffPersistence) GetList(MenuIDList []int) ([]entity.FoodStuff, err
 	}
 	return FoodStuffs, nil
 }
-func (p foodStuffPersistence) BulkCreate(FoodStuffs []entity.FoodStuff) ([]entity.FoodStuff, error) {
+func (p foodStuffPersistence) BulkCreate(FoodStuffs []entity.FoodStuff) error {
 	tx := database.Db.Begin()
 	err := tx.Model(&FoodStuffs).Create(FoodStuffs).Error
 	if err != nil {
 		tx.Rollback()
-		return FoodStuffs, errors.NewInfraError(err, FoodStuffs)
+		return errors.NewInfraError(err, FoodStuffs)
 	}
 	tx.Commit()
-	return FoodStuffs, nil
+	return nil
 }
-func (p foodStuffPersistence) BulkUpdate(FoodStuffs []entity.FoodStuff) ([]entity.FoodStuff, error) {
+func (p foodStuffPersistence) BulkUpdate(FoodStuffs []entity.FoodStuff) error {
 	tx := database.Db.Begin()
-	var res []entity.FoodStuff
 	var err error
 	for _, s := range FoodStuffs {
 		err = tx.Model(&s).Updates(s).Error
 		if err != nil {
 			tx.Rollback()
-			return res, errors.NewInfraError(err, s)
+			return errors.NewInfraError(err, s)
 		}
-		res = append(res, s)
 	}
 	tx.Commit()
-	return res, nil
+	return nil
 }
 func (p foodStuffPersistence) ChangeBuyStatus(ID int, Status int) error {
 	tx := database.Db.Begin()

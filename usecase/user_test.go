@@ -7,11 +7,12 @@ import (
 	"github.com/ipe-dev/menu_project/domain/service"
 	"github.com/ipe-dev/menu_project/infrastructure/database"
 	"github.com/ipe-dev/menu_project/infrastructure/persistence"
+	"github.com/ipe-dev/menu_project/usecase/requests"
 )
 
 func TestCreateUser(t *testing.T) {
 	database.Connect()
-	r := CreateUserRequest{
+	r := requests.CreateUserRequest{
 		Name:     "田中太郎",
 		LoginID:  "new_login",
 		Password: "taro_password",
@@ -26,7 +27,7 @@ func TestCreateUser(t *testing.T) {
 }
 func TestUpdateUser(t *testing.T) {
 	database.Connect()
-	r := UpdateUserRequest{
+	r := requests.UpdateUserRequest{
 		ID:       1,
 		Name:     "user_name_update",
 		LoginID:  "test_id222",
@@ -42,7 +43,7 @@ func TestUpdateUser(t *testing.T) {
 }
 func TestGetUser(t *testing.T) {
 	database.Connect()
-	r := GetUserRequest{
+	r := requests.GetUserRequest{
 		ID: 1,
 	}
 	p := persistence.NewUserPersistence()
@@ -59,7 +60,7 @@ func TestGetUser(t *testing.T) {
 
 func TestLoginUser(t *testing.T) {
 	database.Connect()
-	r := LoginRequest{
+	r := requests.LoginRequest{
 		LoginID:  "test_id222",
 		Password: "test_password",
 	}
