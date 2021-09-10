@@ -61,7 +61,8 @@ func main() {
 
 	// menu
 	menuPersistence := persistence.NewMenuPersistence()
-	menuUsecase := usecase.NewMenuUseCase(menuPersistence)
+	memoService := service.NewMemoService(memoPersistence)
+	menuUsecase := usecase.NewMenuUseCase(menuPersistence, memoPersistence, memoService)
 	menuHandler := handler.NewMenuHandler(menuUsecase)
 	menu := r.Group("/api/menu")
 	menu.Use(jwtMiddleware.MiddlewareFunc())
