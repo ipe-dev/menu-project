@@ -14,7 +14,6 @@ type Menu struct {
 	Date      time.Time
 	Kind      int
 	URL       string
-	UserID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
