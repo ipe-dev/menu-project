@@ -13,16 +13,17 @@ type MemoUseCase interface {
 	GetList(requests.GetMemoListRequest) ([]entity.Memo, error)
 	Create(requests.CreateMemoRequest) error
 	Update(requests.UpdateMemoRequest) error
-	Get(requests.GetMemoRequest) (dto.MemoDto, error)
+	Get(requests.GetMemoRequest) (dto.Memo, error)
 }
 type memoUseCase struct {
 	memoRepository   repository.MemoRepository
 	memoQueryService queryservice.MemoQueryService
 }
 
-func NewMemoUseCase(r repository.MemoRepository) MemoUseCase {
+func NewMemoUseCase(r repository.MemoRepository, q queryservice.MemoQueryService) MemoUseCase {
 	return memoUseCase{
-		memoRepository: r,
+		memoRepository:   r,
+		memoQueryService: q,
 	}
 }
 
@@ -56,7 +57,7 @@ func (u memoUseCase) Update(r requests.UpdateMemoRequest) error {
 	err = u.memoRepository.Update(*memo)
 	return nil
 }
-func (u memoUseCase) Get(r requests.GetMemoRequest) (dto.MemoDto, error) {
+func (u memoUseCase) Get(r requests.GetMemoRequest) (dto.Memo, error) {
 	memo, err := u.memoQueryService.GetMemoWithAccompanyingData(r.ID, r.UserID)
 	return memo, err
 }

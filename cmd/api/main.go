@@ -48,7 +48,8 @@ func main() {
 
 	// memo
 	memoPersistence := persistence.NewMemoPersistence()
-	memoUsecase := usecase.NewMemoUseCase(memoPersistence)
+	memoQueryService := persistence.NewMemoQueryService()
+	memoUsecase := usecase.NewMemoUseCase(memoPersistence, memoQueryService)
 	memoHandler := handler.NewMemoHandler(memoUsecase)
 	memo := r.Group("/api/memo")
 	memo.Use(jwtMiddleware.MiddlewareFunc())
