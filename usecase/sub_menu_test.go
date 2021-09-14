@@ -32,29 +32,7 @@ func TestCreateSubMenu(t *testing.T) {
 		fmt.Println("success")
 	}
 }
-func TestUpdateSubMenu(t *testing.T) {
-	database.Connect()
-	r := requests.UpdateSubMenuRequest{
-		ID:   1,
-		Name: "コブサラダ",
-	}
-	r2 := requests.UpdateSubMenuRequest{
-		ID:   2,
-		Name: "お茶漬け",
-	}
-	var req []requests.UpdateSubMenuRequest
-	req = append(req, r)
-	req = append(req, r2)
-	bulkRequest := requests.BulkUpdateSubMenuRequest{req}
-	p := persistence.NewSubMenuPersistence()
-	menuUseCase := NewSubMenuUseCase(p)
-	e := menuUseCase.BulkUpdate(bulkRequest)
-	if e != nil {
-		t.Fatalf("failed test %#v", e)
-	} else {
-		fmt.Println("success")
-	}
-}
+
 func TestGetSubMenu(t *testing.T) {
 	database.Connect()
 	r := requests.GetSubMenuRequest{

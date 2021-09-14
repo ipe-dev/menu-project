@@ -11,7 +11,6 @@ import (
 
 type FoodStuffHandler interface {
 	HandleBulkCreate() gin.HandlerFunc
-	HandleBulkUpdate() gin.HandlerFunc
 	HandleGetList() gin.HandlerFunc
 	HandleGet() gin.HandlerFunc
 	HandleChangeBuyStatus() gin.HandlerFunc
@@ -60,23 +59,7 @@ func (h foodStuffHandler) HandleBulkCreate() gin.HandlerFunc {
 		}
 	}
 }
-func (h foodStuffHandler) HandleBulkUpdate() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var r requests.BulkUpdateFoodStuffRequest
-		e := c.BindJSON(&r)
-		if e != nil {
-			err := errors.NewValidateError(e, c.Request)
-			c.Error(err).SetType(gin.ErrorTypePublic)
-			return
-		}
-		e = h.foodStuffUseCase.BulkUpdate(r)
-		if e != nil {
-			c.Error(e).SetType(gin.ErrorTypePublic)
-		} else {
-			c.JSON(http.StatusOK, gin.H{})
-		}
-	}
-}
+
 func (h foodStuffHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r requests.GetFoodStuffListRequest

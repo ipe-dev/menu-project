@@ -11,7 +11,6 @@ import (
 
 type SubMenuHandler interface {
 	HandleBulkCreate() gin.HandlerFunc
-	HandleBulkUpdate() gin.HandlerFunc
 	HandleGetList() gin.HandlerFunc
 	HandleGet() gin.HandlerFunc
 }
@@ -58,22 +57,7 @@ func (h subMenuHandler) HandleBulkCreate() gin.HandlerFunc {
 		}
 	}
 }
-func (h subMenuHandler) HandleBulkUpdate() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var r requests.BulkUpdateSubMenuRequest
-		e := c.BindJSON(&r)
-		if e != nil {
-			err := errors.NewValidateError(e, c.Request)
-			c.Error(err)
-		}
-		e = h.subMenuUseCase.BulkUpdate(r)
-		if e != nil {
-			c.Error(e).SetType(gin.ErrorTypePublic)
-		} else {
-			c.JSON(http.StatusOK, gin.H{})
-		}
-	}
-}
+
 func (h subMenuHandler) HandleGetList() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var r requests.GetSubMenuListRequest

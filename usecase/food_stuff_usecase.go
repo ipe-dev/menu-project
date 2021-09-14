@@ -10,7 +10,6 @@ type FoodStuffUseCase interface {
 	Get(requests.GetFoodStuffRequest) (entity.FoodStuff, error)
 	GetList(requests.GetFoodStuffListRequest) ([]entity.FoodStuff, error)
 	BulkCreate(requests.BulkCreateFoodStuffRequest) error
-	BulkUpdate(requests.BulkUpdateFoodStuffRequest) error
 	ChangeBuyStatus(requests.ChangeFoodStuffStatusRequest) error
 }
 type foodStuffUseCase struct {
@@ -40,19 +39,7 @@ func (u foodStuffUseCase) BulkCreate(r requests.BulkCreateFoodStuffRequest) erro
 		)
 		foodstuffs = append(foodstuffs, *foodstuff)
 	}
-	err := u.foodStuffRepository.BulkCreate(foodstuffs)
-	return err
-}
-func (u foodStuffUseCase) BulkUpdate(r requests.BulkUpdateFoodStuffRequest) error {
-	var foodstuffs []entity.FoodStuff
-	for _, v := range r.UpdateRequests {
-		foodstuff := entity.NewFoodStuff(
-			entity.FoodStuffIDOption(v.ID),
-			entity.FoodStuffMenuNameOption(v.Name),
-		)
-		foodstuffs = append(foodstuffs, *foodstuff)
-	}
-	err := u.foodStuffRepository.BulkUpdate(foodstuffs)
+	err := u.foodStuffRepository.Save(foodstuffs)
 	return err
 }
 

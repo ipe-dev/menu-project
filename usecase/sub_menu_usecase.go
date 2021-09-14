@@ -10,7 +10,6 @@ type SubMenuUseCase interface {
 	Get(requests.GetSubMenuRequest) ([]entity.SubMenu, error)
 	GetList(requests.GetSubMenuListRequest) ([]entity.SubMenu, error)
 	BulkCreate(requests.BulkCreateSubMenuRequest) error
-	BulkUpdate(requests.BulkUpdateSubMenuRequest) error
 }
 type subMenuUseCase struct {
 	subMenuRepository repository.SubMenuRepository
@@ -41,19 +40,6 @@ func (u subMenuUseCase) BulkCreate(bc requests.BulkCreateSubMenuRequest) error {
 		)
 		submenus = append(submenus, *submenu)
 	}
-	err := u.subMenuRepository.BulkCreate(submenus)
-	return err
-}
-func (u subMenuUseCase) BulkUpdate(r requests.BulkUpdateSubMenuRequest) error {
-	var submenus []entity.SubMenu
-	for _, v := range r.UpdateRequests {
-		submenu := entity.NewSubMenu(
-			entity.SubMenuMemoIDOption(v.ID),
-			entity.SubMenuNameOption(v.Name),
-		)
-
-		submenus = append(submenus, *submenu)
-	}
-	err := u.subMenuRepository.BulkUpdate(submenus)
+	err := u.subMenuRepository.Save(submenus)
 	return err
 }
