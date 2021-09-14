@@ -31,24 +31,14 @@ func (p subMenuPersistence) GetList(MenuIDList []int) ([]entity.SubMenu, error) 
 	return submenus, nil
 }
 
-func (p subMenuPersistence) BulkCreate(submenus []entity.SubMenu) error {
-	tx := database.Db.Begin()
-	err := tx.Create(&submenus).Error
-	if err != nil {
-		tx.Rollback()
-		return errors.NewInfraError(err, submenus)
-	}
-	tx.Commit()
-	return nil
-}
-func (p subMenuPersistence) BulkUpdate(submenus []entity.SubMenu) error {
+func (p subMenuPersistence) Save(submenus []entity.SubMenu) error {
 	tx := database.Db.Begin()
 	var err error
-	for _, v := range submenus {
-		err = tx.Updates(v).Error
+	for _, submenu := range submenus {
+		err = tx.Where("id = ?", submenu.ID).Assign(submenu).FirstOrCreate(&submenu).Error
 		if err != nil {
 			tx.Rollback()
-			return errors.NewInfraError(err, v)
+			return errors.NewInfraError(err, submenu)
 		}
 	}
 	tx.Commit()

@@ -30,24 +30,15 @@ func (p foodStuffPersistence) GetList(MenuIDList []int) ([]entity.FoodStuff, err
 	}
 	return FoodStuffs, nil
 }
-func (p foodStuffPersistence) BulkCreate(FoodStuffs []entity.FoodStuff) error {
-	tx := database.Db.Begin()
-	err := tx.Model(&FoodStuffs).Create(FoodStuffs).Error
-	if err != nil {
-		tx.Rollback()
-		return errors.NewInfraError(err, FoodStuffs)
-	}
-	tx.Commit()
-	return nil
-}
-func (p foodStuffPersistence) BulkUpdate(FoodStuffs []entity.FoodStuff) error {
+
+func (p foodStuffPersistence) Save(FoodStuffs []entity.FoodStuff) error {
 	tx := database.Db.Begin()
 	var err error
-	for _, s := range FoodStuffs {
-		err = tx.Model(&s).Updates(s).Error
+	for _, foodstuff := range FoodStuffs {
+		err = tx.Where("id = ?", foodstuff.ID).Assign(foodstuff).FirstOrCreate(&foodstuff).Error
 		if err != nil {
 			tx.Rollback()
-			return errors.NewInfraError(err, s)
+			return errors.NewInfraError(err, foodstuff)
 		}
 	}
 	tx.Commit()

@@ -85,7 +85,6 @@ func main() {
 		submenu.POST("/get/list", subMenuHandler.HandleGetList())
 		submenu.POST("/get", subMenuHandler.HandleGet())
 		submenu.POST("/create", subMenuHandler.HandleBulkCreate())
-		submenu.POST("/update", subMenuHandler.HandleBulkUpdate())
 	}
 
 	// food_stuff
@@ -99,7 +98,6 @@ func main() {
 		foodstuff.POST("/get/list", foodStuffHandler.HandleGetList())
 		foodstuff.POST("/get", foodStuffHandler.HandleGet())
 		foodstuff.POST("/create", foodStuffHandler.HandleBulkCreate())
-		foodstuff.POST("/update", foodStuffHandler.HandleBulkUpdate())
 		foodstuff.POST("/status", foodStuffHandler.HandleChangeBuyStatus())
 	}
 

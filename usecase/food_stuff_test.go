@@ -32,29 +32,7 @@ func TestCreateFoodStuff(t *testing.T) {
 		fmt.Println("success")
 	}
 }
-func TestUpdateFoodStuff(t *testing.T) {
-	database.Connect()
-	r := requests.UpdateFoodStuffRequest{
-		ID:   1,
-		Name: "レタス",
-	}
-	r2 := requests.UpdateFoodStuffRequest{
-		ID:   2,
-		Name: "ニンジン",
-	}
-	var req []requests.UpdateFoodStuffRequest
-	req = append(req, r)
-	req = append(req, r2)
-	bulkRequest := requests.BulkUpdateFoodStuffRequest{req}
-	p := persistence.NewFoodStuffPersistence()
-	menuUseCase := NewFoodStuffUseCase(p)
-	e := menuUseCase.BulkUpdate(bulkRequest)
-	if e != nil {
-		t.Fatalf("failed test %#v", e)
-	} else {
-		fmt.Println("success")
-	}
-}
+
 func TestGetFoodStuff(t *testing.T) {
 	database.Connect()
 	r := requests.GetFoodStuffRequest{
