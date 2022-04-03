@@ -59,5 +59,8 @@ func (u memoUseCase) Update(r requests.UpdateMemoRequest) error {
 }
 func (u memoUseCase) Get(r requests.GetMemoRequest) (dto.Memo, error) {
 	memo, err := u.memoQueryService.GetMemoWithAccompanyingData(r.ID, r.UserID)
+	if err == nil {
+		memo.ConvertDateTimestamp()
+	}
 	return memo, err
 }

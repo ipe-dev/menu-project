@@ -16,3 +16,9 @@ type Memo struct {
 	SubMenus   []SubMenu   `json:"sub_menus"`
 	FoodStuffs []FoodStuff `json:"food_stuffs"`
 }
+
+func (m *Memo) ConvertDateTimestamp() {
+	for k, v := range m.Menus {
+		m.Menus[k].UnixDate = v.Date.Unix()
+	}
+}
