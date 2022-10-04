@@ -1,0 +1,37 @@
+version: "3"
+services:
+  go:
+    env_file:
+      - .env
+    environment:
+      - PORT
+    ports:
+      - 5001:8080
+    build: ./docker/go
+    tty: true
+    volumes:
+      - ./go:/go/src/app
+    working_dir: /go/src/app
+    container_name: api
+  mysql:
+    build: ./docker/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    container_name: db
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+  next:
+    ports:
+      - 3000:3000
+    build: ./docker/next
+    volumes:
+      - ./next:/opt/app
+    container_name: next
+    tty: true
+volumes:
+  db:
+    driver: local
